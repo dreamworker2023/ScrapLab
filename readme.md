@@ -24,6 +24,10 @@ Il sito è diviso in diverse sezioni tematiche, ognuna con tabelle ricche di dat
 | `hardware.html` | **Hardware PC** | Prezzi in $, Wattaggi e Benchmark. Ottimo per raggruppamenti per Brand. |
 | `stati.html` | **Macroeconomia** | PIL, Popolazione e Aspettativa di vita. Ideale per grafici a dispersione (Scatter Plot). |
 | `calcio.html` | **Sport & Finance** | Statistiche di club europei e valori di mercato. Perfetto per ordinamenti e filtri. |
+| `libri.html` | **Editoria & Shop** | Titoli, Autori e Rating. Sfida: convertire recensioni testuali (es. "4 stelle") in numeri. |
+| `film.html` | **Cinema & Box Office** | Registi, Durate e Incassi. Sfida: parsing di durate (es. "2h 15m") e date di uscita. |
+
+---
 
 ---
 
@@ -32,4 +36,5 @@ Il sito è diviso in diverse sezioni tematiche, ognuna con tabelle ricche di dat
 Per completare le esercitazioni, assicurati di avere installato l'ambiente Python con le seguenti librerie:
 
 ```bash
+
 pip install selenium pandas numpy matplotlib openpyxl
