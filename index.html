@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScrapLab – Home</title>
+  
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #818cf8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+
+  /* ── INDEX CARDS ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    border: 2px solid transparent;
+    transition: border .2s, transform .2s;
+    display: block;
+  }
+  .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+  .card .icon { font-size: 2rem; margin-bottom: .5rem; }
+  .card h2 { font-size: 1rem; color: var(--primary); }
+  .card p { font-size: .85rem; color: var(--muted); margin-top: .25rem; }
+</style>
+
+</head>
+<body>
+<nav><span class="brand">📊 ScrapLab</span><a href="index.html" class="active">🏠 Home</a></nav>
+<main>
+  <h1>Benvenuto su ScrapLab</h1>
+  <p style="color:var(--muted);margin-bottom:1.5rem">
+    Sito di esercitazione per Web Scraping con <strong>Selenium</strong>,
+    analisi dati con <strong>Pandas</strong> e visualizzazione con <strong>Matplotlib</strong>.
+  </p>
+  <div class="cards"><a class="card" href="hardware.html">
+  <div class="icon">🖥️</div>
+  <h2>Hardware – GPU & CPU</h2>
+  <p>7 colonne · dati generati da AI</p>
+</a>
+<a class="card" href="stati.html">
+  <div class="icon">🌍</div>
+  <h2>Indicatori Globali degli Stati</h2>
+  <p>7 colonne · dati generati da AI</p>
+</a>
+<a class="card" href="libri.html">
+  <div class="icon">📚</div>
+  <h2>Classifica Libri</h2>
+  <p>7 colonne · dati generati da AI</p>
+</a>
+<a class="card" href="film.html">
+  <div class="icon">🎬</div>
+  <h2>Database Film</h2>
+  <p>7 colonne · dati generati da AI</p>
+</a>
+<a class="card" href="calciatori.html">
+  <div class="icon">⚽</div>
+  <h2>Statistiche Calciatori</h2>
+  <p>7 colonne · dati generati da AI</p>
+</a>
+</div>
+</main>
+<footer>ScrapLab – tutti i dati sono generati da AI a scopo didattico</footer>
+</body>
+</html>

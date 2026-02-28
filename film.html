@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Film – ScrapLab</title>
+  
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #818cf8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+
+  /* ── INDEX CARDS ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    border: 2px solid transparent;
+    transition: border .2s, transform .2s;
+    display: block;
+  }
+  .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+  .card .icon { font-size: 2rem; margin-bottom: .5rem; }
+  .card h2 { font-size: 1rem; color: var(--primary); }
+  .card p { font-size: .85rem; color: var(--muted); margin-top: .25rem; }
+</style>
+
+</head>
+<body>
+<nav><span class="brand">📊 ScrapLab</span><a href="index.html">🏠 Home</a><a href="hardware.html">Hardware – GPU & CPU</a><a href="stati.html">Indicatori Globali degli Stati</a><a href="libri.html">Classifica Libri</a><a href="film.html" class="active">Database Film</a><a href="calciatori.html">Statistiche Calciatori</a></nav>
+<main>
+  <h1>Database Film</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter"><option value="-1">Tutte le colonne</option><option value="0">Titolo</option><option value="1">Regista</option><option value="2">Anno</option><option value="3">Genere</option><option value="4">Durata (min)</option><option value="5">Incasso ($)</option><option value="6">Voto IMDb</option></select>
+    <span class="badge" id="row-count"></span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Titolo</th><th>Regista</th><th>Anno</th><th>Genere</th><th>Durata (min)</th><th>Incasso ($)</th><th>Voto IMDb</th></tr></thead>
+      <tbody><tr><td>E.T. - The Extra-Terrestrial</td><td>Steven Spielberg</td><td>08/06/1982</td><td>Fantasy</td><td>114</td><td>470000000</td><td>8.4</td></tr>
+<tr><td>Jaws</td><td>Steven Spielberg</td><td>20/06/1975</td><td>Thriller</td><td>124</td><td>47000000</td><td>7.6</td></tr>
+<tr><td>The Shawshank Redemption</td><td>Frank Darabont</td><td>23/09/1994</td><td>Drama</td><td>142</td><td>5000000</td><td>9.2</td></tr>
+<tr><td>Inception</td><td>Christopher Nolan</td><td>16/07/2010</td><td>Action</td><td>148</td><td>82500000</td><td>8.5</td></tr>
+<tr><td>The Dark Knight</td><td>Christopher Nolan</td><td>25/07/2008</td><td>Superhero</td><td>162</td><td>100500000</td><td>9.0</td></tr>
+<tr><td>12 Angry Men</td><td>Sidney Lumet</td><td>17/10/1957</td><td>Drama</td><td>96</td><td>70000</td><td>9.2</td></tr>
+<tr><td>Schindler's List</td><td>Steven Spielberg</td><td>07/12/1993</td><td>Historical drama</td><td>184</td><td>2000000</td><td>8.6</td></tr>
+<tr><td>The Lord of the Rings: The Return of the King</td><td>Peter Jackson</td><td>17/12/2003</td><td>Fantasy</td><td>201</td><td>75000000</td><td>9.1</td></tr>
+<tr><td>Pulp Fiction</td><td>Quentin Tarantino</td><td>14/09/1994</td><td>Crime</td><td>154</td><td>10050000</td><td>8.7</td></tr>
+<tr><td>The Silence of the Lambs</td><td>Jonathan Demme</td><td>14/02/1991</td><td>Thriller</td><td>118</td><td>4500000</td><td>8.6</td></tr>
+<tr><td>Forrest Gump</td><td>Robert Zemeckis</td><td>23/07/1994</td><td>Comedy</td><td>142</td><td>33000000</td><td>8.5</td></tr>
+<tr><td>The Matrix</td><td>The Wachowskis</td><td>31/03/1999</td><td>Science fiction</td><td>113</td><td>4630000</td><td>8.7</td></tr>
+<tr><td>Star Wars: Episode IV - A New Hope</td><td>George Lucas</td><td>25/05/1977</td><td>Science fiction</td><td>121</td><td>33750000</td><td>8.6</td></tr>
+<tr><td>The Silence of the Lambs</td><td>Jonathan Demme</td><td>14/02/1991</td><td>Thriller</td><td>118</td><td>4500000</td><td>8.6</td></tr>
+<tr><td>Jurassic Park</td><td>Steven Spielberg</td><td>11/06/1993</td><td>Science fiction</td><td>127</td><td>91450000</td><td>8.5</td></tr>
+<tr><td>The Princess Bride</td><td>Rob Reiner</td><td>25/09/1987</td><td>Fantasy</td><td>98</td><td>3000000</td><td>8.4</td></tr>
+<tr><td>The Good, the Bad and the Ugly</td><td>Sergio Leone</td><td>23/12/1966</td><td>Western</td><td>178</td><td>1000000</td><td>8.1</td></tr>
+<tr><td>Apocalypse Now</td><td>Francis Ford Coppola</td><td>15/08/1979</td><td>War</td><td>162</td><td>15000000</td><td>8.5</td></tr>
+<tr><td>The Godfather: Part II</td><td>Francis Ford Coppola</td><td>12/12/1974</td><td>Crime</td><td>200</td><td>1400000</td><td>8.3</td></tr>
+<tr><td>Seven Samurai</td><td>Akira Kurosawa</td><td>02/06/1954</td><td>Action</td><td>207</td><td>50000</td><td>8.5</td></tr>
+<tr><td>Casablanca</td><td>Michael Curtiz</td><td>26/11/1942</td><td>Romance</td><td>102</td><td>6000000</td><td>8.5</td></tr>
+<tr><td>2001: A Space Odyssey</td><td>Stanley Kubrick</td><td>29/04/1968</td><td>Science fiction</td><td>141</td><td>10000000</td><td>8.4</td></tr>
+<tr><td>Taxi Driver</td><td>Martin Scorsese</td><td>11/12/1976</td><td>Thriller</td><td>117</td><td>3000000</td><td>8.5</td></tr>
+<tr><td>The Godfather</td><td>Francis Ford Coppola</td><td>15/03/1972</td><td>Crime</td><td>177</td><td>13500000</td><td>9.2</td></tr>
+<tr><td>E.T. the Extra-Terrestrial</td><td>Steven Spielberg</td><td>08/06/1982</td><td>Fantasy</td><td>114</td><td>470000000</td><td>8.4</td></tr>
+<tr><td>Jaws</td><td>Steven Spielberg</td><td>20/06/1975</td><td>Thriller</td><td>124</td><td>47000000</td><td>7.6</td></tr>
+<tr><td>The Shawshank Redemption</td><td>Frank Darabont</td><td>23/09/1994</td><td>Drama</td><td>142</td><td>5000000</td><td>9.2</td></tr>
+<tr><td>Inception</td><td>Christopher Nolan</td><td>16/07/2010</td><td>Action</td><td>148</td><td>82500000</td><td>8.5</td></tr>
+<tr><td>The Dark Knight</td><td>Christopher Nolan</td><td>25/07/2008</td><td>Superhero</td><td>162</td><td>100500000</td><td>9.0</td></tr>
+<tr><td>12 Angry Men</td><td>Sidney Lumet</td><td>17/10/1957</td><td>Drama</td><td>96</td><td>70000</td><td>9.2</td></tr>
+<tr><td>Schindler's List</td><td>Steven Spielberg</td><td>07/12/1993</td><td>Historical drama</td><td>184</td><td>2000000</td><td>8.6</td></tr>
+<tr><td>The Lord of the Rings: The Return of the King</td><td>Peter Jackson</td><td>17/12/2003</td><td>Fantasy</td><td>201</td><td>75000000</td><td>9.1</td></tr>
+<tr><td>Pulp Fiction</td><td>Quentin Tarantino</td><td>14/09/1994</td><td>Crime</td><td>154</td><td>10050000</td><td>8.7</td></tr>
+<tr><td>The Silence of the Lambs</td><td>Jonathan Demme</td><td>14/02/1991</td><td>Thriller</td><td>118</td><td>4500000</td><td>8.6</td></tr>
+</tbody>
+    </table>
+  </div>
+  <div class="pagination" id="pagination"></div>
+</main>
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 15;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody   = document.querySelector('tbody');
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  const countEl = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel  = document.getElementById('col-filter');
+  const pagDiv  = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);  // -1 = tutte
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total  = filtered.length;
+    const pages  = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start  = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice  = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    // no-results
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    // pagination
+    pagDiv.innerHTML = '';
+    const range = pageRange(currentPage, pages);
+    range.forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur-1); i <= Math.min(tot-1, cur+1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  // Event listeners
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  // Init
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>

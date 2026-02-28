@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hardware – GPU & CPU – ScrapLab</title>
+  
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #818cf8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+
+  /* ── INDEX CARDS ── */
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 1.25rem; }
+  .card {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    padding: 1.5rem;
+    text-decoration: none;
+    color: var(--text);
+    border: 2px solid transparent;
+    transition: border .2s, transform .2s;
+    display: block;
+  }
+  .card:hover { border-color: var(--primary); transform: translateY(-3px); }
+  .card .icon { font-size: 2rem; margin-bottom: .5rem; }
+  .card h2 { font-size: 1rem; color: var(--primary); }
+  .card p { font-size: .85rem; color: var(--muted); margin-top: .25rem; }
+</style>
+
+</head>
+<body>
+<nav><span class="brand">📊 ScrapLab</span><a href="index.html">🏠 Home</a><a href="hardware.html" class="active">Hardware – GPU & CPU</a><a href="stati.html">Indicatori Globali degli Stati</a><a href="libri.html">Classifica Libri</a><a href="film.html">Database Film</a><a href="calciatori.html">Statistiche Calciatori</a></nav>
+<main>
+  <h1>Hardware – GPU & CPU</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter"><option value="-1">Tutte le colonne</option><option value="0">Modello</option><option value="1">Produttore</option><option value="2">Prezzo ($)</option><option value="3">TDP (W)</option><option value="4">Data Uscita</option><option value="5">Voto /10</option><option value="6">Stock</option></select>
+    <span class="badge" id="row-count"></span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Modello</th><th>Produttore</th><th>Prezzo ($)</th><th>TDP (W)</th><th>Data Uscita</th><th>Voto /10</th><th>Stock</th></tr></thead>
+      <tbody><tr><td>RTX 3080 Ti</td><td>NVIDIA</td><td>1499.99</td><td>260</td><td>16/11/2020</td><td>8.5</td><td>True</td></tr>
+<tr><td>Ryzen 9 5900X</td><td>AMD</td><td>699.99</td><td>125</td><td>01/08/2021</td><td>9.2</td><td>False</td></tr>
+<tr><td>GeForce RTX 3060 Ti</td><td>NVIDIA</td><td>499.99</td><td>260</td><td>25/12/2020</td><td>8.7</td><td>True</td></tr>
+<tr><td>Core i9-11900K</td><td>Intel</td><td>799.99</td><td>95</td><td>22/02/2021</td><td>9.5</td><td>False</td></tr>
+<tr><td>Radeon RX 6800 XT</td><td>AMD</td><td>399.99</td><td>260</td><td>20/01/2022</td><td>8.4</td><td>True</td></tr>
+<tr><td>GeForce RTX 3070 Ti</td><td>NVIDIA</td><td>899.99</td><td>320</td><td>02/06/2021</td><td>9.3</td><td>False</td></tr>
+<tr><td>Core i5-11600K</td><td>Intel</td><td>349.99</td><td>95</td><td>01/03/2021</td><td>8.2</td><td>True</td></tr>
+<tr><td>Ryzen 7 5800X</td><td>AMD</td><td>499.99</td><td>125</td><td>04/11/2021</td><td>9.1</td><td>False</td></tr>
+<tr><td>GeForce GTX 1660 Super</td><td>NVIDIA</td><td>249.99</td><td>120</td><td>29/12/2019</td><td>8.5</td><td>True</td></tr>
+<tr><td>Core i7-11700K</td><td>Intel</td><td>599.99</td><td>95</td><td>15/05/2021</td><td>9.4</td><td>False</td></tr>
+<tr><td>Radeon RX 5700 XT</td><td>AMD</td><td>299.99</td><td>225</td><td>21/07/2020</td><td>8.3</td><td>True</td></tr>
+<tr><td>GeForce RTX 3050 Ti</td><td>NVIDIA</td><td>399.99</td><td>260</td><td>05/02/2022</td><td>9.1</td><td>False</td></tr>
+<tr><td>Core i3-11300K</td><td>Intel</td><td>249.99</td><td>95</td><td>20/08/2021</td><td>8.1</td><td>True</td></tr>
+<tr><td>Ryzen 5 5600X</td><td>AMD</td><td>349.99</td><td>125</td><td>10/09/2021</td><td>9.2</td><td>False</td></tr>
+<tr><td>GeForce GTX 1070 Ti</td><td>NVIDIA</td><td>299.99</td><td>180</td><td>27/11/2017</td><td>8.6</td><td>True</td></tr>
+<tr><td>Core i5-11400K</td><td>Intel</td><td>349.99</td><td>95</td><td>15/04/2021</td><td>8.4</td><td>False</td></tr>
+<tr><td>Radeon RX 6700 XT</td><td>AMD</td><td>499.99</td><td>260</td><td>18/02/2022</td><td>9.5</td><td>False</td></tr>
+<tr><td>GeForce RTX 2060 Super</td><td>NVIDIA</td><td>399.99</td><td>180</td><td>13/07/2020</td><td>8.7</td><td>True</td></tr>
+<tr><td>Core i3-11200K</td><td>Intel</td><td>199.99</td><td>95</td><td>25/03/2021</td><td>8.2</td><td>True</td></tr>
+<tr><td>Ryzen 9 5900</td><td>AMD</td><td>599.99</td><td>125</td><td>22/12/2021</td><td>9.4</td><td>False</td></tr>
+<tr><td>GeForce GTX 1660 Ti</td><td>NVIDIA</td><td>249.99</td><td>120</td><td>17/10/2019</td><td>8.6</td><td>True</td></tr>
+<tr><td>Core i7-11700F</td><td>Intel</td><td>599.99</td><td>95</td><td>19/05/2021</td><td>9.3</td><td>False</td></tr>
+<tr><td>Radeon RX 5800 XT</td><td>AMD</td><td>399.99</td><td>225</td><td>01/04/2020</td><td>8.4</td><td>True</td></tr>
+<tr><td>GeForce RTX 3050</td><td>NVIDIA</td><td>299.99</td><td>260</td><td>03/02/2022</td><td>9.1</td><td>False</td></tr>
+<tr><td>Core i5-11400F</td><td>Intel</td><td>249.99</td><td>95</td><td>12/04/2021</td><td>8.3</td><td>True</td></tr>
+<tr><td>Ryzen 7 5700X</td><td>AMD</td><td>499.99</td><td>125</td><td>26/09/2021</td><td>9.2</td><td>False</td></tr>
+<tr><td>GeForce GTX 1050 Ti</td><td>NVIDIA</td><td>149.99</td><td>75</td><td>15/11/2016</td><td>8.4</td><td>True</td></tr>
+</tbody>
+    </table>
+  </div>
+  <div class="pagination" id="pagination"></div>
+</main>
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 15;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody   = document.querySelector('tbody');
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  const countEl = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel  = document.getElementById('col-filter');
+  const pagDiv  = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);  // -1 = tutte
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total  = filtered.length;
+    const pages  = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start  = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice  = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    // no-results
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    // pagination
+    pagDiv.innerHTML = '';
+    const range = pageRange(currentPage, pages);
+    range.forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur-1); i <= Math.min(tot-1, cur+1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  // Event listeners
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  // Init
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>
