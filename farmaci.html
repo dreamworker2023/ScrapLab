@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Farmaci e Principi Attivi - ScrapLab</title><link rel="stylesheet" href="style.css"></head>
+<body>
+  <nav><span class="brand">📊 ScrapLab</span>
+        <a href="index.html">🏠 Home</a>
+    <a href="hardware.html">Hardware – GPU & CPU</a>
+    <a href="stati.html">Indicatori Globali degli Stati</a>
+    <a href="libri.html">Classifica Libri</a>
+    <a href="film.html">Database Film</a>
+    <a href="calciatori.html">Statistiche Calciatori</a>
+    <a href="missioni_spaziali.html">Missioni Spaziali</a>
+    <a href="farmaci.html" class="active">Farmaci e Principi Attivi</a>
+  </nav>
+  <main>
+<h1>Farmaci e Principi Attivi</h1>
+<div class="controls">
+  <input type="text" id="s" placeholder="Cerca...">
+  <select id="cf"><option value="-1">Tutte le colonne</option><option value="0">Farmaco</option><option value="1">Principio Attivo</option><option value="2">Categoria</option><option value="3">Casa Farmaceutica</option><option value="4">Prezzo (€)</option><option value="5">Dosaggio (mg)</option><option value="6">Ricetta</option><option value="7">Disponibilità</option></select>
+  <span class="badge" id="rc"></span>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Farmaco</th><th>Principio Attivo</th><th>Categoria</th><th>Casa Farmaceutica</th><th>Prezzo (€)</th><th>Dosaggio (mg)</th><th>Ricetta</th><th>Disponibilità</th></tr></thead>
+  <tbody><tr><td>Acetaminophene</td><td>500mg</td><td>Analgesico</td><td>GSK</td><td>1.50</td><td>500</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Metformine</td><td>1000mg</td><td>Antidiabete</td><td>MSD</td><td>2.00</td><td>1000</td><td>Sì</td><td>Comune</td></tr>
+<tr><td>Amoxicillina</td><td>500mg</td><td>Antibiotico</td><td>GSK</td><td>3.00</td><td>500</td><td>No</td><td>Ottimo</td></tr>
+<tr><td>Amlodipina</td><td>10mg</td><td>Antiipertensivo</td><td>Pfizer</td><td>4.50</td><td>10</td><td>Sì</td><td>Buona scelta</td></tr>
+<tr><td>Lorazepam</td><td>2mg</td><td>Anxiotico</td><td>Roche</td><td>1.80</td><td>2</td><td>Sì</td><td>Difficile da trovare</td></tr>
+<tr><td>Ibuprofene</td><td>400mg</td><td>Antiinfiammatorio</td><td>Bayer</td><td>2.20</td><td>400</td><td>No</td><td>Molto disponibile</td></tr>
+<tr><td>Omeprazolo</td><td>20mg</td><td>Antacidico</td><td>AstraZeneca</td><td>3.50</td><td>20</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Ciprofloxacina</td><td>500mg</td><td>Antibiotico</td><td>Bayer</td><td>4.00</td><td>500</td><td>No</td><td>Buona scelta</td></tr>
+<tr><td>Atorvastatina</td><td>10mg</td><td>Antiipolipemico</td><td>Pfizer</td><td>2.50</td><td>10</td><td>Sì</td><td>Molto disponibile</td></tr>
+<tr><td>Ketoprofene</td><td>200mg</td><td>Antiinfiammatorio</td><td>GSK</td><td>1.80</td><td>200</td><td>No</td><td>Ottimo</td></tr>
+<tr><td>Fluoxetina</td><td>20mg</td><td>Antidepressivo</td><td>Lilly</td><td>3.00</td><td>20</td><td>Sì</td><td>Difficile da trovare</td></tr>
+<tr><td>Aspirina</td><td>100mg</td><td>Antiaggregante</td><td>Bayer</td><td>0.80</td><td>100</td><td>No</td><td>Molto disponibile</td></tr>
+<tr><td>Clopidogrel</td><td>75mg</td><td>Antipatico</td><td>Sanofi</td><td>2.00</td><td>75</td><td>Sì</td><td>Comune</td></tr>
+<tr><td>Venlafaxina</td><td>37.5mg</td><td>Antidepressivo</td><td>Pfizer</td><td>3.50</td><td>37.5</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Indometacina</td><td>25mg</td><td>Antiinfiammatorio</td><td>GSK</td><td>1.20</td><td>25</td><td>No</td><td>Buona scelta</td></tr>
+<tr><td>Lisinopril</td><td>10mg</td><td>Antiipertensivo</td><td>MSD</td><td>2.50</td><td>10</td><td>Sì</td><td>Molto disponibile</td></tr>
+<tr><td>Citalopram</td><td>20mg</td><td>Antidepressivo</td><td>Lilly</td><td>3.00</td><td>20</td><td>Sì</td><td>Difficile da trovare</td></tr>
+<tr><td>Simvastatina</td><td>40mg</td><td>Antiipolipemico</td><td>Pfizer</td><td>2.50</td><td>40</td><td>Sì</td><td>Comune</td></tr>
+<tr><td>Tamsulosina</td><td>0,4mg</td><td>Antagonista alfa-adrenergico</td><td>Bayer</td><td>1.80</td><td>0.4</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Rosuvastatina</td><td>10mg</td><td>Antiipolipemico</td><td>AstraZeneca</td><td>2.50</td><td>10</td><td>Sì</td><td>Molto disponibile</td></tr>
+<tr><td>Nortriptilina</td><td>25mg</td><td>Antagonista serotoninergico</td><td>Roche</td><td>1.80</td><td>25</td><td>Sì</td><td>Buona scelta</td></tr>
+<tr><td>Furosemida</td><td>40mg</td><td>Diuretico</td><td>MSD</td><td>0.80</td><td>40</td><td>No</td><td>Molto disponibile</td></tr>
+<tr><td>Piracetam</td><td>800mg</td><td>Neuroprotettivo</td><td>UCB</td><td>2.50</td><td>800</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Paracetamolo</td><td>Acetaminofene</td><td>Analgesico</td><td>GSK</td><td>1.80</td><td>500</td><td>Sì</td><td>Disponibile</td></tr>
+<tr><td>Lorazepam</td><td>Lorazepato</td><td>Ansiolitico</td><td>Schering-Plough</td><td>2.50</td><td>2</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Aspirina</td><td></td><td>Antagonista</td><td>Bayer</td><td>0.80</td><td>300</td><td>Sì</td><td>Disponibile</td></tr>
+<tr><td>Metformina</td><td>Metformina</td><td>Antiipertensivo</td><td>Merck Sharp & Dohme</td><td>1.20</td><td>500</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Cefalexina</td><td>Cefalexina</td><td>Antibiotico</td><td>GSK</td><td>2.00</td><td>1250</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Omeprazolo</td><td>Omeprazolo</td><td>Inibitore</td><td>AstraZeneca</td><td>1.50</td><td>20</td><td>Sì</td><td>Disponibile</td></tr>
+<tr><td>Diazepam</td><td></td><td>Ansiolitico</td><td>Roche</td><td>2.00</td><td>5</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Captopril</td><td></td><td>Antiipertensivo</td><td>Bristol-Myers Squibb</td><td>1.20</td><td>50</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Ibuprofene</td><td>Ibuprofeno</td><td>Antalgico</td><td>Pfizer</td><td>0.90</td><td>200</td><td>Sì</td><td>Disponibile</td></tr>
+<tr><td>Amlodipina</td><td></td><td>Antiipertensivo</td><td>Novartis</td><td>1.30</td><td>10</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Fluconazolo</td><td>Fluconazolo</td><td>Antifungico</td><td>Pfizer</td><td>2.00</td><td>50</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Tamsulosina</td><td></td><td>Antiipertensivo</td><td>Bristol-Myers Squibb</td><td>1.20</td><td>0.4</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Amoxicillina</td><td>Aminoamoxicillina</td><td>Antibiotico</td><td>GlaxoSmithKline</td><td>2.00</td><td>500</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Ciclosporina</td><td></td><td>Immunosoppressore</td><td>Novartis</td><td>1.50</td><td>25</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Clarithromicina</td><td></td><td>Antibiotico</td><td>AbbVie</td><td>2.00</td><td>250</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Simvastatina</td><td></td><td>Hipolipemizzante</td><td>Merck Sharp & Dohme</td><td>1.50</td><td>20</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Oxazepam</td><td></td><td>Ansiolitico</td><td>Roche</td><td>2.00</td><td>10</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Furosemida</td><td></td><td>Diuretico</td><td>Pfizer</td><td>0.80</td><td>40</td><td>No</td><td>Disponibile</td></tr>
+<tr><td>Tolperisone</td><td></td><td>Muscolare</td><td>Janssen-Cilag</td><td>1.20</td><td>250</td><td>Sì</td><td>Raro</td></tr>
+<tr><td>Metoclopramide</td><td></td><td>Antiemetico</td><td>Emcure</td><td>0.80</td><td>10</td><td>No</td><td>Disponibile</td></tr></tbody>
+</table></div>
+<div class="pag" id="pag"></div>
+</main>
+<footer>ScrapLab - sito di esercitazione per Selenium, Pandas e Matplotlib</footer>
+<span style="position:fixed;bottom:12px;right:12px;background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-family:monospace;z-index:999;">⚡ Facile</span><script>
+(function(){
+const RPP=25;let pg=1,sc=-1,sd=1,fil=[];
+const tb=document.querySelector('tbody'),all=Array.from(tb.querySelectorAll('tr')),
+      cnt=document.getElementById('rc'),se=document.getElementById('s'),
+      cs=document.getElementById('cf'),pd=document.getElementById('pag');
+function filt(){const q=se.value.toLowerCase(),c=parseInt(cs.value);
+  fil=all.filter(tr=>{const cl=tr.querySelectorAll('td');
+    if(c===-1)return Array.from(cl).some(td=>td.textContent.toLowerCase().includes(q));
+    return cl[c]&&cl[c].textContent.toLowerCase().includes(q);});pg=1;ren();}
+function srt(i){if(sc===i)sd*=-1;else{sc=i;sd=1;}
+  fil.sort((a,b)=>{const va=a.querySelectorAll('td')[i]?.textContent||'',vb=b.querySelectorAll('td')[i]?.textContent||'';
+    const na=parseFloat(va.replace(/[^0-9.\-]/g,'')),nb=parseFloat(vb.replace(/[^0-9.\-]/g,''));
+    if(!isNaN(na)&&!isNaN(nb))return(na-nb)*sd;return va.localeCompare(vb)*sd;});
+  document.querySelectorAll('thead th').forEach((th,j)=>{th.classList.remove('asc','desc');
+    if(j===i)th.classList.add(sd===1?'asc':'desc');});ren();}
+function ren(){const tot=fil.length,pgs=Math.max(1,Math.ceil(tot/RPP));
+  if(pg>pgs)pg=pgs;const st=(pg-1)*RPP,sl=fil.slice(st,st+RPP);
+  all.forEach(tr=>tr.style.display='none');sl.forEach(tr=>tr.style.display='');
+  let no=tb.querySelector('.er');
+  if(!sl.length){if(!no){no=document.createElement('tr');no.className='er';
+    no.innerHTML='<td colspan="'+document.querySelectorAll('thead th').length+'" class="empty">Nessun risultato.</td>';tb.appendChild(no);}}
+  else if(no)no.remove();
+  cnt.textContent=tot+' righe';pd.innerHTML='';
+  prng(pg,pgs).forEach(p=>{const b=document.createElement('button');
+    if(p==='…'){b.textContent='…';b.disabled=true;}
+    else{b.textContent=p;if(p===pg)b.classList.add('on');b.onclick=()=>{pg=p;ren();};}
+    pd.appendChild(b);});}
+function prng(c,t){if(t<=7)return Array.from({length:t},(_,i)=>i+1);
+  const r=[1];if(c>3)r.push('…');
+  for(let i=Math.max(2,c-1);i<=Math.min(t-1,c+1);i++)r.push(i);
+  if(c<t-2)r.push('…');r.push(t);return r;}
+se.addEventListener('input',filt);cs.addEventListener('change',filt);
+document.querySelectorAll('thead th').forEach((th,i)=>th.addEventListener('click',()=>srt(i)));
+fil=[...all];ren();})();
+</script></body></html>

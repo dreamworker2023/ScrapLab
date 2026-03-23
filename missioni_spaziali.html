@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="it"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Missioni Spaziali - ScrapLab</title><link rel="stylesheet" href="style.css">
+<style>
+  :root {
+  --p: #00d4ff;
+  --pl: #45a7f9;
+  --bg: #1a1a1a;
+  --card: #282828;
+  --tx: #ffffff;
+  --mu: #444444;
+  --bo: #55b2fe;
+  --hover: #3c8df5;
+  --r: 6px;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx)}
+nav{background:var(--p);padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+nav .brand{color:#fff;font-weight:700;font-size:1.1rem;padding:1rem 0;margin-right:auto}
+nav a{color:rgba(255,255,255,.8);text-decoration:none;padding:.75rem .9rem;border-radius:6px;font-size:.9rem;transition:background .15s}
+nav a:hover,nav a.active{background:rgba(255,255,255,.15);color:#fff}
+main{max-width:1300px;margin:2rem auto;padding:0 1.5rem}
+h1{font-size:1.6rem;margin-bottom:1.25rem;color:var(--p)}
+.controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
+.controls input{flex:1;min-width:220px;padding:.5rem .9rem;border:1px solid var(--bo);border-radius:8px;font-size:.9rem;outline:none;background:var(--card);color:var(--tx)}
+.controls input:focus{border-color:var(--p)}
+.controls select{padding:.5rem .8rem;border:1px solid var(--bo);border-radius:8px;font-size:.9rem;background:var(--card);color:var(--tx)}
+.badge{background:var(--p);color:#fff;border-radius:20px;padding:.25rem .75rem;font-size:.8rem;margin-left:auto}
+.table-wrap{background:var(--card);border-radius:var(--r);box-shadow:0 1px 4px rgba(0,0,0,.1);overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.9rem}
+thead th{background:var(--p);color:#fff;padding:.75rem 1rem;text-align:left;cursor:pointer;white-space:nowrap;position:sticky;top:0;user-select:none}
+thead th:hover{background:var(--pl)}
+thead th.asc::after{content:" ▲";font-size:.7rem;opacity:.8}
+thead th.desc::after{content:" ▼";font-size:.7rem;opacity:.8}
+tbody tr{border-bottom:1px solid var(--bo);transition:background .1s}
+tbody tr:hover{background:var(--hover)}
+td{padding:.65rem 1rem}
+.empty{text-align:center;padding:2rem;color:var(--mu);font-style:italic}
+.pag{display:flex;justify-content:center;gap:.4rem;margin-top:1.25rem;flex-wrap:wrap}
+.pag button{padding:.4rem .8rem;border:1px solid var(--bo);border-radius:6px;background:var(--card);color:var(--tx);cursor:pointer;font-size:.85rem;transition:background .15s,color .15s}
+.pag button:hover,.pag button.on{background:var(--p);color:#fff;border-color:var(--p)}
+footer{text-align:center;color:var(--mu);font-size:.8rem;padding:2rem 0 1rem;border-top:1px solid var(--bo);margin-top:2rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
+.card{background:var(--card);border-radius:var(--r);box-shadow:0 1px 6px rgba(0,0,0,.1);padding:1.5rem;text-decoration:none;color:var(--tx);border:2px solid transparent;transition:border .2s,transform .2s,box-shadow .2s;display:block}
+.card:hover{border-color:var(--p);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
+.card .icon{font-size:2.2rem;margin-bottom:.6rem;line-height:1}
+.card h2{font-size:1rem;color:var(--p);margin-bottom:.25rem}
+.card p{font-size:.85rem;color:var(--mu)}
+</style>
+</head>
+<body>
+  <nav><span class="brand">📊 ScrapLab</span>
+    <a href="index.html">🏠 Home</a>
+    <a href="hardware.html">Hardware – GPU & CPU</a>
+    <a href="stati.html">Indicatori Globali degli Stati</a>
+    <a href="libri.html">Classifica Libri</a>
+    <a href="film.html">Database Film</a>
+    <a href="calciatori.html">Statistiche Calciatori</a>
+    <a href="missioni_spaziali.html" class="active">Missioni Spaziali</a>
+    <a href="farmaci.html">Farmaci e Principi Attivi</a>
+  </nav>
+<main>
+<h1>Missioni Spaziali</h1>
+<div class="controls">
+  <input type="text" id="s" placeholder="Cerca...">
+  <select id="cf"><option value="-1">Tutte le colonne</option><option value="0">Missione</option><option value="1">Agenzia</option><option value="2">Anno Lancio</option><option value="3">Destinazione</option><option value="4">Durata (giorni)</option><option value="5">Equipaggio</option><option value="6">Costo (Mld $)</option><option value="7">Esito</option></select>
+  <span class="badge" id="rc"></span>
+</div>
+<div class="table-wrap"><table>
+  <thead><tr><th>Missione</th><th>Agenzia</th><th>Anno Lancio</th><th>Destinazione</th><th>Durata (giorni)</th><th>Equipaggio</th><th>Costo (Mld $)</th><th>Esito</th></tr></thead>
+  <tbody><tr><td>Apollo 11</td><td>NASA</td><td>16/07/1969</td><td>Luna</td><td>8</td><td></td><td>$120</td><td>Success</td></tr>
+<tr><td>Viking 1</td><td>NASA</td><td>20/08/1975</td><td>Marte</td><td>626</td><td></td><td>$655,000,000</td><td>Success</td></tr>
+<tr><td>Cassini-Huygens</td><td>NASA</td><td>15/10/1997</td><td>Saturno</td><td>13 years</td><td></td><td>$3.2</td><td>Success</td></tr>
+<tr><td>Envisat</td><td>ESA</td><td>01/08/2002</td><td>Piano Terra</td><td>5 years</td><td></td><td>$1.8</td><td>Success</td></tr>
+<tr><td>Phoenix</td><td>NASA</td><td>04/08/2007</td><td>Marte</td><td>153</td><td></td><td>$420,000,000</td><td>Success</td></tr>
+<tr><td>Curiosity</td><td>NASA</td><td>26/11/2011</td><td>Marte</td><td>2,400</td><td></td><td>$2.5</td><td>Ongoing</td></tr>
+<tr><td>Rosetta</td><td>ESA</td><td>08/03/2004</td><td>Cometa 67P/T</td><td>10 years</td><td></td><td>$1.9</td><td>Success</td></tr>
+<tr><td>New Horizons</td><td>NASA</td><td>19/01/2006</td><td>Pluto</td><td>9,500</td><td></td><td>$700,000,000</td><td>Success</td></tr>
+<tr><td>InSight</td><td>NASA</td><td>30/05/2018</td><td>Marte</td><td>728</td><td></td><td>$717,000,000</td><td>Ongoing</td></tr>
+<tr><td>Parker Solar Probe</td><td>NASA</td><td>12/08/2018</td><td>Sol</td><td>7 years</td><td></td><td>$1.5</td><td>Ongoing</td></tr>
+<tr><td>Dragonfly</td><td>NASA</td><td>14/07/2020</td><td>Titan</td><td>2,700</td><td></td><td>$450,000,000</td><td>Planned</td></tr>
+<tr><td>BepiColombo</td><td>ESA</td><td>15/10/2018</td><td>Mercurio</td><td>6 years</td><td></td><td>$1.3</td><td>Ongoing</td></tr>
+<tr><td>Perseverance</td><td>NASA</td><td>30/07/2020</td><td>Marte</td><td>687</td><td></td><td>$2.5</td><td>Ongoing</td></tr>
+<tr><td>James Webb Space Telescope</td><td>NASA</td><td>25/10/2021</td><td>Orbita Terra</td><td>5 years</td><td></td><td>$8.7</td><td>Planned</td></tr>
+<tr><td>Mariner 2</td><td>NASA</td><td>1962-08-27</td><td>Venus</td><td>267</td><td>0</td><td>0.2</td><td>Success</td></tr>
+<tr><td>Pioneer 6</td><td>NASA</td><td>1965-06-15</td><td>Mars</td><td>1 year</td><td>0</td><td>0.3</td><td>Failure</td></tr>
+<tr><td>Apollo 11</td><td>NASA</td><td>1969-07-16</td><td>Moon</td><td>8 days</td><td>3</td><td>20</td><td>Success</td></tr>
+<tr><td>Viking 1</td><td>NASA</td><td>1975-08-20</td><td>Mars</td><td>2,067 days</td><td>0</td><td>660</td><td>Success</td></tr>
+<tr><td>Galileo</td><td>ESA</td><td>1989-10-18</td><td>Jupiter</td><td>14 years</td><td>0</td><td>2.1</td><td>Failure</td></tr>
+<tr><td>Cassini-Huygens</td><td>NASA/ESA</td><td>1997-10-15</td><td>Saturn</td><td>13,800 days</td><td>0</td><td>3.4</td><td>Success</td></tr>
+<tr><td>Mars Science Laboratory (Curiosity)</td><td>NASA</td><td>2011-11-26</td><td>Mars</td><td>2,000+ days</td><td>8</td><td>2.5</td><td>Ongoing</td></tr>
+<tr><td>GRAIL</td><td>NASA</td><td>2011-09-10</td><td>Moon</td><td>84 days</td><td>0</td><td>0.3</td><td>Success</td></tr>
+<tr><td>LADEE</td><td>NASA</td><td>2013-04-11</td><td>Moon</td><td>371 days</td><td>0</td><td>0.2</td><td>Failure</td></tr>
+<tr><td>Mars Atmosphere and Volatile Evolution (MAVEN)</td><td>NASA</td><td>2013-11-18</td><td>Mars</td><td>10,000+ days</td><td>0</td><td>1.5</td><td>Ongoing</td></tr>
+<tr><td>New Horizons</td><td>NASA</td><td>2006-01-19</td><td>Pluto</td><td>9 years</td><td>0</td><td>0.7</td><td>Success</td></tr>
+<tr><td>Rosetta</td><td>ESA</td><td>2004-03-02</td><td>Comet 67P/Churyumov-Gerasimenko</td><td>10 years</td><td>1</td><td>2.3</td><td>Failure</td></tr>
+<tr><td>OSIRIS-REx</td><td>NASA</td><td>2016-09-08</td><td>Asteroid Bennu</td><td>5,000+ days</td><td>0</td><td>0.8</td><td>Ongoing</td></tr>
+<tr><td>InSight</td><td>NASA</td><td>2018-05-05</td><td>Mars</td><td>2,000+ days</td><td>1</td><td>0.7</td><td>Ongoing</td></tr>
+<tr><td>TESS</td><td>NASA</td><td>2018-04-18</td><td>Space</td><td>4 years</td><td>0</td><td>0.3</td><td>Success</td></tr>
+<tr><td>Parker Solar Probe</td><td>NASA</td><td>2018-08-12</td><td>Sun</td><td>10,000+ days</td><td>0</td><td>1.2</td><td>Ongoing</td></tr>
+<tr><td>BepiColombo</td><td>ESA</td><td>2018-04-19</td><td>Mercury</td><td>7 years</td><td>0</td><td>1.5</td><td>Ongoing</td></tr>
+<tr><td>Dragonfly</td><td>NASA</td><td>2020-12-06</td><td>Titan</td><td>3,000+ days</td><td>0</td><td>0.4</td><td>Ongoing</td></tr>
+<tr><td>Perseverance</td><td>NASA</td><td>2020-07-30</td><td>Mars</td><td>2,000+ days</td><td>1</td><td>1.3</td><td>Ongoing</td></tr>
+<tr><td>JWST</td><td>NASA</td><td>2022-12-25</td><td>Space</td><td>5 years</td><td>0</td><td>2.4</td><td>Ongoing</td></tr></tbody>
+</table></div>
+<div class="pag" id="pag"></div>
+</main>
+<footer>ScrapLab - sito di esercitazione per Selenium, Pandas e Matplotlib</footer>
+<span style="position:fixed;bottom:12px;right:12px;background:#22c55e;color:#fff;padding:4px 12px;border-radius:20px;font-size:12px;font-family:monospace;z-index:999;">⚡ Facile</span><script>
+(function(){
+const RPP=25;let pg=1,sc=-1,sd=1,fil=[];
+const tb=document.querySelector('tbody'),all=Array.from(tb.querySelectorAll('tr')),
+      cnt=document.getElementById('rc'),se=document.getElementById('s'),
+      cs=document.getElementById('cf'),pd=document.getElementById('pag');
+function filt(){const q=se.value.toLowerCase(),c=parseInt(cs.value);
+  fil=all.filter(tr=>{const cl=tr.querySelectorAll('td');
+    if(c===-1)return Array.from(cl).some(td=>td.textContent.toLowerCase().includes(q));
+    return cl[c]&&cl[c].textContent.toLowerCase().includes(q);});pg=1;ren();}
+function srt(i){if(sc===i)sd*=-1;else{sc=i;sd=1;}
+  fil.sort((a,b)=>{const va=a.querySelectorAll('td')[i]?.textContent||'',vb=b.querySelectorAll('td')[i]?.textContent||'';
+    const na=parseFloat(va.replace(/[^0-9.\-]/g,'')),nb=parseFloat(vb.replace(/[^0-9.\-]/g,''));
+    if(!isNaN(na)&&!isNaN(nb))return(na-nb)*sd;return va.localeCompare(vb)*sd;});
+  document.querySelectorAll('thead th').forEach((th,j)=>{th.classList.remove('asc','desc');
+    if(j===i)th.classList.add(sd===1?'asc':'desc');});ren();}
+function ren(){const tot=fil.length,pgs=Math.max(1,Math.ceil(tot/RPP));
+  if(pg>pgs)pg=pgs;const st=(pg-1)*RPP,sl=fil.slice(st,st+RPP);
+  all.forEach(tr=>tr.style.display='none');sl.forEach(tr=>tr.style.display='');
+  let no=tb.querySelector('.er');
+  if(!sl.length){if(!no){no=document.createElement('tr');no.className='er';
+    no.innerHTML='<td colspan="'+document.querySelectorAll('thead th').length+'" class="empty">Nessun risultato.</td>';tb.appendChild(no);}}
+  else if(no)no.remove();
+  cnt.textContent=tot+' righe';pd.innerHTML='';
+  prng(pg,pgs).forEach(p=>{const b=document.createElement('button');
+    if(p==='…'){b.textContent='…';b.disabled=true;}
+    else{b.textContent=p;if(p===pg)b.classList.add('on');b.onclick=()=>{pg=p;ren();};}
+    pd.appendChild(b);});}
+function prng(c,t){if(t<=7)return Array.from({length:t},(_,i)=>i+1);
+  const r=[1];if(c>3)r.push('…');
+  for(let i=Math.max(2,c-1);i<=Math.min(t-1,c+1);i++)r.push(i);
+  if(c<t-2)r.push('…');r.push(t);return r;}
+se.addEventListener('input',filt);cs.addEventListener('change',filt);
+document.querySelectorAll('thead th').forEach((th,i)=>th.addEventListener('click',()=>srt(i)));
+fil=[...all];ren();})();
+</script></body></html>
