@@ -2,47 +2,6 @@
 <html lang="it"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Farmaci e Principi Attivi - ScrapLab</title><link rel="stylesheet" href="style.css"></head>
-  <style>
-
-:root{
-  --p:#4f46e5;--pl:#818cf8;--bg:#f1f5f9;--card:#ffffff;
-  --tx:#1e293b;--mu:#64748b;--bo:#e2e8f0;--hover:#f8fafc;--r:12px
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx)}
-nav{background:var(--p);padding:0 2rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-nav .brand{color:#fff;font-weight:700;font-size:1.1rem;padding:1rem 0;margin-right:auto}
-nav a{color:rgba(255,255,255,.8);text-decoration:none;padding:.75rem .9rem;border-radius:6px;font-size:.9rem;transition:background .15s}
-nav a:hover,nav a.active{background:rgba(255,255,255,.15);color:#fff}
-main{max-width:1300px;margin:2rem auto;padding:0 1.5rem}
-h1{font-size:1.6rem;margin-bottom:1.25rem;color:var(--p)}
-.controls{display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;margin-bottom:1rem}
-.controls input{flex:1;min-width:220px;padding:.5rem .9rem;border:1px solid var(--bo);border-radius:8px;font-size:.9rem;outline:none;background:var(--card);color:var(--tx)}
-.controls input:focus{border-color:var(--p)}
-.controls select{padding:.5rem .8rem;border:1px solid var(--bo);border-radius:8px;font-size:.9rem;background:var(--card);color:var(--tx)}
-.badge{background:var(--p);color:#fff;border-radius:20px;padding:.25rem .75rem;font-size:.8rem;margin-left:auto}
-.table-wrap{background:var(--card);border-radius:var(--r);box-shadow:0 1px 4px rgba(0,0,0,.1);overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:.9rem}
-thead th{background:var(--p);color:#fff;padding:.75rem 1rem;text-align:left;cursor:pointer;white-space:nowrap;position:sticky;top:0;user-select:none}
-thead th:hover{background:var(--pl)}
-thead th.asc::after{content:" ▲";font-size:.7rem;opacity:.8}
-thead th.desc::after{content:" ▼";font-size:.7rem;opacity:.8}
-tbody tr{border-bottom:1px solid var(--bo);transition:background .1s}
-tbody tr:hover{background:var(--hover)}
-td{padding:.65rem 1rem}
-.empty{text-align:center;padding:2rem;color:var(--mu);font-style:italic}
-.pag{display:flex;justify-content:center;gap:.4rem;margin-top:1.25rem;flex-wrap:wrap}
-.pag button{padding:.4rem .8rem;border:1px solid var(--bo);border-radius:6px;background:var(--card);color:var(--tx);cursor:pointer;font-size:.85rem;transition:background .15s,color .15s}
-.pag button:hover,.pag button.on{background:var(--p);color:#fff;border-color:var(--p)}
-footer{text-align:center;color:var(--mu);font-size:.8rem;padding:2rem 0 1rem;border-top:1px solid var(--bo);margin-top:2rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
-.card{background:var(--card);border-radius:var(--r);box-shadow:0 1px 6px rgba(0,0,0,.1);padding:1.5rem;text-decoration:none;color:var(--tx);border:2px solid transparent;transition:border .2s,transform .2s,box-shadow .2s;display:block}
-.card:hover{border-color:var(--p);transform:translateY(-3px);box-shadow:0 6px 20px rgba(0,0,0,.15)}
-.card .icon{font-size:2.2rem;margin-bottom:.6rem;line-height:1}
-.card h2{font-size:1rem;color:var(--p);margin-bottom:.25rem}
-.card p{font-size:.85rem;color:var(--mu)}
-
-</style>
 <body>
   <nav><span class="brand">📊 ScrapLab</span>
         <a href="index.html">🏠 Home</a>
@@ -50,6 +9,7 @@ footer{text-align:center;color:var(--mu);font-size:.8rem;padding:2rem 0 1rem;bor
     <a href="stati.html">Indicatori Globali degli Stati</a>
     <a href="libri.html">Classifica Libri</a>
     <a href="film.html">Database Film</a>
+    <a href="videogiochi.html">Database Videogiochi</a>
     <a href="calciatori.html">Statistiche Calciatori</a>
     <a href="missioni_spaziali.html">Missioni Spaziali</a>
     <a href="farmaci.html" class="active">Farmaci e Principi Attivi</a>

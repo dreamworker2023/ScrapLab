@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Videogiochi – ScrapLab</title>
+  
+<style>
+  :root {
+    --primary: #4f46e5;
+    --primary-light: #818cf8;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f8fafc; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+</style>
+
+</head>
+<body>
+<nav>
+  <span class="brand">📊 ScrapLab</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="hardware.html">Hardware – GPU & CPU</a>
+  <a href="stati.html">Indicatori Globali degli Stati</a>
+  <a href="libri.html">Classifica Libri</a>
+  <a href="film.html">Database Film</a>
+  <a href="videogiochi.html" class="active">Database Videogiochi</a>
+  <a href="calciatori.html">Statistiche Calciatori</a>
+  <a href="missioni_spaziali.html">Missioni Spaziali</a>
+  <a href="farmaci.html">Farmaci e Principi Attivi</a>
+</nav>
+  
+  <main>
+    <h1>Database Videogiochi</h1>
+    <div class="controls">
+      <input type="text" id="search" placeholder="🔍 Cerca per titolo, sviluppatore o genere...">
+      <select id="col-filter">
+        <option value="-1">Tutte le colonne</option>
+        <option value="0">Titolo</option>
+        <option value="1">Sviluppatore</option>
+        <option value="2">Data Rilascio</option>
+        <option value="3">Genere</option>
+        <option value="4">Piattaforma</option>
+        <option value="5">Copie Vendute</option>
+        <option value="6">Voto Metacritic</option>
+      </select>
+      <span class="badge" id="row-count"></span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Titolo</th>
+            <th>Sviluppatore</th>
+            <th>Data Rilascio</th>
+            <th>Genere</th>
+            <th>Piattaforma</th>
+            <th>Copie Vendute</th>
+            <th>Voto Metacritic</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Elden Ring</td><td>FromSoftware</td><td>25/02/2022</td><td>Action RPG</td><td>Multi</td><td>23000000</td><td>96</td></tr>
+          <tr><td>The Legend of Zelda: Breath of the Wild</td><td>Nintendo</td><td>03/03/2017</td><td>Adventure</td><td>Switch</td><td>31150000</td><td>97</td></tr>
+          <tr><td>The Witcher 3: Wild Hunt</td><td>CD Projekt Red</td><td>19/05/2015</td><td>RPG</td><td>Multi</td><td>50000000</td><td>92</td></tr>
+          <tr><td>God of War Ragnarök</td><td>Santa Monica Studio</td><td>09/11/2022</td><td>Action</td><td>PS5/PS4</td><td>15000000</td><td>94</td></tr>
+          <tr><td>Minecraft</td><td>Mojang</td><td>18/11/2011</td><td>Sandbox</td><td>Multi</td><td>300000000</td><td>93</td></tr>
+          <tr><td>Red Dead Redemption 2</td><td>Rockstar Games</td><td>26/10/2018</td><td>Action-Adventure</td><td>Multi</td><td>57000000</td><td>97</td></tr>
+          <tr><td>Grand Theft Auto V</td><td>Rockstar North</td><td>17/09/2013</td><td>Action</td><td>Multi</td><td>190000000</td><td>97</td></tr>
+          <tr><td>Cyberpunk 2077</td><td>CD Projekt Red</td><td>10/12/2020</td><td>RPG</td><td>Multi</td><td>25000000</td><td>86</td></tr>
+          <tr><td>Hades</td><td>Supergiant Games</td><td>17/09/2020</td><td>Roguelike</td><td>Multi</td><td>1000000</td><td>93</td></tr>
+          <tr><td>Baldur's Gate 3</td><td>Larian Studios</td><td>03/08/2023</td><td>RPG</td><td>PC/PS5</td><td>10000000</td><td>96</td></tr>
+          <tr><td>The Last of Us Part II</td><td>Naughty Dog</td><td>19/06/2020</td><td>Action</td><td>PS4</td><td>10000000</td><td>93</td></tr>
+          <tr><td>Super Mario Odyssey</td><td>Nintendo</td><td>27/10/2017</td><td>Platform</td><td>Switch</td><td>26910000</td><td>97</td></tr>
+          <tr><td>Horizon Zero Dawn</td><td>Guerrilla Games</td><td>28/02/2017</td><td>Action RPG</td><td>PS4/PC</td><td>24000000</td><td>89</td></tr>
+          <tr><td>Bloodborne</td><td>FromSoftware</td><td>24/03/2015</td><td>Action RPG</td><td>PS4</td><td>7000000</td><td>92</td></tr>
+          <tr><td>Sekiro: Shadows Die Twice</td><td>FromSoftware</td><td>22/03/2019</td><td>Action</td><td>Multi</td><td>10000000</td><td>91</td></tr>
+          <tr><td>Ghost of Tsushima</td><td>Sucker Punch</td><td>17/07/2020</td><td>Action</td><td>PS4/PS5</td><td>9700000</td><td>83</td></tr>
+          <tr><td>Final Fantasy VII Remake</td><td>Square Enix</td><td>10/04/2020</td><td>RPG</td><td>PS4/PS5</td><td>7000000</td><td>87</td></tr>
+          <tr><td>Animal Crossing: New Horizons</td><td>Nintendo</td><td>20/03/2020</td><td>Simulation</td><td>Switch</td><td>43380000</td><td>90</td></tr>
+          <tr><td>Stardew Valley</td><td>ConcernedApe</td><td>26/02/2016</td><td>Simulation</td><td>Multi</td><td>30000000</td><td>89</td></tr>
+          <tr><td>Hollow Knight</td><td>Team Cherry</td><td>24/02/2017</td><td>Metroidvania</td><td>Multi</td><td>3000000</td><td>90</td></tr>
+          <tr><td>Celeste</td><td>Extremely OK Games</td><td>25/01/2018</td><td>Platform</td><td>Multi</td><td>1000000</td><td>92</td></tr>
+          <tr><td>Disco Elysium</td><td>ZA/UM</td><td>15/10/2019</td><td>RPG</td><td>Multi</td><td>2000000</td><td>97</td></tr>
+          <tr><td>Portal 2</td><td>Valve</td><td>18/04/2011</td><td>Puzzle</td><td>Multi</td><td>4000000</td><td>95</td></tr>
+          <tr><td>Half-Life 2</td><td>Valve</td><td>16/11/2004</td><td>FPS</td><td>PC</td><td>12000000</td><td>96</td></tr>
+          <tr><td>BioShock</td><td>2K Boston</td><td>21/08/2007</td><td>FPS</td><td>Multi</td><td>4000000</td><td>96</td></tr>
+          <tr><td>Skyrim</td><td>Bethesda</td><td>11/11/2011</td><td>RPG</td><td>Multi</td><td>60000000</td><td>94</td></tr>
+          <tr><td>Fallout 4</td><td>Bethesda</td><td>10/11/2015</td><td>RPG</td><td>Multi</td><td>25000000</td><td>87</td></tr>
+          <tr><td>DOOM Eternal</td><td>id Software</td><td>20/03/2020</td><td>FPS</td><td>Multi</td><td>3000000</td><td>88</td></tr>
+          <tr><td>Resident Evil 4 Remake</td><td>Capcom</td><td>24/03/2023</td><td>Horror</td><td>Multi</td><td>7000000</td><td>93</td></tr>
+          <tr><td>Street Fighter 6</td><td>Capcom</td><td>02/06/2023</td><td>Fighting</td><td>Multi</td><td>3000000</td><td>92</td></tr>
+          <tr><td>Tekken 8</td><td>Bandai Namco</td><td>26/01/2024</td><td>Fighting</td><td>Multi</td><td>2000000</td><td>90</td></tr>
+          <tr><td>Overwatch</td><td>Blizzard</td><td>24/05/2016</td><td>Hero Shooter</td><td>Multi</td><td>50000000</td><td>91</td></tr>
+          <tr><td>Diablo IV</td><td>Blizzard</td><td>05/06/2023</td><td>Action RPG</td><td>Multi</td><td>10000000</td><td>86</td></tr>
+          <tr><td>Starfield</td><td>Bethesda</td><td>06/09/2023</td><td>RPG</td><td>PC/Xbox</td><td>12000000</td><td>83</td></tr>
+          <tr><td>Mass Effect 2</td><td>BioWare</td><td>26/01/2010</td><td>RPG</td><td>Multi</td><td>5000000</td><td>96</td></tr>
+          <tr><td>Uncharted 4</td><td>Naughty Dog</td><td>10/05/2016</td><td>Adventure</td><td>PS4/PC</td><td>16000000</td><td>93</td></tr>
+          <tr><td>It Takes Two</td><td>Hazelight</td><td>26/03/2021</td><td>Co-op Platform</td><td>Multi</td><td>16000000</td><td>89</td></tr>
+          <tr><td>Stray</td><td>BlueTwelve Studio</td><td>19/07/2022</td><td>Adventure</td><td>Multi</td><td>2000000</td><td>83</td></tr>
+          <tr><td>Persona 5 Royal</td><td>Atlus</td><td>31/10/2019</td><td>JRPG</td><td>Multi</td><td>3200000</td><td>95</td></tr>
+          <tr><td>Monster Hunter: World</td><td>Capcom</td><td>26/01/2018</td><td>Action RPG</td><td>Multi</td><td>23000000</td><td>90</td></tr>
+          <tr><td>Dark Souls III</td><td>FromSoftware</td><td>24/03/2016</td><td>Action RPG</td><td>Multi</td><td>10000000</td><td>89</td></tr>
+          <tr><td>Forza Horizon 5</td><td>Playground Games</td><td>09/11/2021</td><td>Racing</td><td>PC/Xbox</td><td>34000000</td><td>92</td></tr>
+          <tr><td>Gran Turismo 7</td><td>Polyphony Digital</td><td>04/03/2022</td><td>Racing</td><td>PS4/PS5</td><td>5000000</td><td>87</td></tr>
+          <tr><td>Cuphead</td><td>Studio MDHR</td><td>29/09/2017</td><td>Boss Rush</td><td>Multi</td><td>6000000</td><td>88</td></tr>
+          <tr><td>Undertale</td><td>Toby Fox</td><td>15/09/2015</td><td>RPG</td><td>Multi</td><td>4000000</td><td>92</td></tr>
+          <tr><td>Alan Wake 2</td><td>Remedy Entertainment</td><td>27/10/2023</td><td>Horror</td><td>Multi</td><td>1300000</td><td>89</td></tr>
+          <tr><td>Control</td><td>Remedy Entertainment</td><td>27/08/2019</td><td>Action</td><td>Multi</td><td>4000000</td><td>85</td></tr>
+          <tr><td>Death Stranding</td><td>Kojima Productions</td><td>08/11/2019</td><td>Action</td><td>PS4/PC</td><td>10000000</td><td>82</td></tr>
+          <tr><td>Spider-Man 2</td><td>Insomniac Games</td><td>20/10/2023</td><td>Action</td><td>PS5</td><td>10000000</td><td>90</td></tr>
+          <tr><td>Sea of Thieves</td><td>Rare</td><td>20/03/2018</td><td>Adventure</td><td>PC/Xbox</td><td>35000000</td><td>67</td></tr>
+          <tr><td>Terraria</td><td>Re-Logic</td><td>16/05/2011</td><td>Sandbox</td><td>Multi</td><td>44500000</td><td>83</td></tr>
+          <tr><td>Among Us</td><td>Innersloth</td><td>15/06/2018</td><td>Social Deduction</td><td>Multi</td><td>500000000</td><td>85</td></tr>
+          <tr><td>Fall Guys</td><td>Mediatonic</td><td>04/08/2020</td><td>Battle Royale</td><td>Multi</td><td>50000000</td><td>80</td></tr>
+          <tr><td>Fortnite</td><td>Epic Games</td><td>25/07/2017</td><td>Battle Royale</td><td>Multi</td><td>0</td><td>81</td></tr>
+          <tr><td>League of Legends</td><td>Riot Games</td><td>27/10/2009</td><td>MOBA</td><td>PC</td><td>0</td><td>78</td></tr>
+          <tr><td>Dota 2</td><td>Valve</td><td>09/07/2013</td><td>MOBA</td><td>PC</td><td>0</td><td>90</td></tr>
+          <tr><td>Counter-Strike 2</td><td>Valve</td><td>27/09/2023</td><td>FPS</td><td>PC</td><td>0</td><td>82</td></tr>
+          <tr><td>Apex Legends</td><td>Respawn</td><td>04/02/2019</td><td>Battle Royale</td><td>Multi</td><td>0</td><td>88</td></tr>
+          <tr><td>Metroid Dread</td><td>MercurySteam</td><td>08/10/2021</td><td>Metroidvania</td><td>Switch</td><td>3000000</td><td>88</td></tr>
+          <tr><td>Returnal</td><td>Housemarque</td><td>30/04/2021</td><td>Roguelike</td><td>PS5/PC</td><td>1000000</td><td>86</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination" id="pagination"></div>
+  </main>
+
+  <footer>ScrapLab – Database Esercitazione per Studenti</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 15;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody   = document.querySelector('tbody');
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  const countEl = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel  = document.getElementById('col-filter');
+  const pagDiv  = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb, 'it', {numeric: true}) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total  = filtered.length;
+    const pages  = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start  = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice  = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun videogioco trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' videogiochi';
+
+    pagDiv.innerHTML = '';
+    const range = pageRange(currentPage, pages);
+    range.forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur-1); i <= Math.min(tot-1, cur+1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  filtered = [...allRows];
+  render();
+})();
+</script>
+</body>
+</html>
