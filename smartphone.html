@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Smartphone – ScrapLab</title>
+
+<style>
+  :root {
+    --primary: #0f766e;
+    --primary-light: #5eead4;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); color: var(--text); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f0fdfa; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 ScrapLab</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="hardware.html">Hardware – GPU &amp; CPU</a>
+  <a href="stati.html">Indicatori Globali degli Stati</a>
+  <a href="libri.html">Classifica Libri</a>
+  <a href="film.html">Database Film</a>
+  <a href="calciatori.html">Statistiche Calciatori</a>
+  <a href="missioni_spaziali.html">Missioni Spaziali</a>
+  <a href="farmaci.html">Farmaci e Principi Attivi</a>
+  <a href="smartphone.html" class="active">Database Smartphone</a>
+</nav>
+
+<main>
+  <h1>Database Smartphone</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter">
+      <option value="-1">Tutte le colonne</option>
+      <option value="0">Modello</option>
+      <option value="1">Marca</option>
+      <option value="2">Anno</option>
+      <option value="3">Categoria</option>
+      <option value="4">RAM (GB)</option>
+      <option value="5">Prezzo (€)</option>
+      <option value="6">Batteria (mAh)</option>
+    </select>
+    <span class="badge" id="row-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Modello</th>
+          <th>Marca</th>
+          <th>Anno</th>
+          <th>Categoria</th>
+          <th>RAM (GB)</th>
+          <th>Prezzo (€)</th>
+          <th>Batteria (mAh)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>iPhone 15 Pro Max</td><td>Apple</td><td>2023</td><td>Flagship</td><td>8</td><td>1299</td><td>4422</td></tr>
+        <tr><td>Samsung Galaxy S24 Ultra</td><td>Samsung</td><td>2024</td><td>Flagship</td><td>12</td><td>1369</td><td>5000</td></tr>
+        <tr><td>Google Pixel 8 Pro</td><td>Google</td><td>2023</td><td>Flagship</td><td>12</td><td>1099</td><td>5050</td></tr>
+        <tr><td>OnePlus 12</td><td>OnePlus</td><td>2024</td><td>Flagship</td><td>16</td><td>899</td><td>5400</td></tr>
+        <tr><td>Sony Xperia 1 VI</td><td>Sony</td><td>2024</td><td>Flagship</td><td>12</td><td>1299</td><td>5000</td></tr>
+        <tr><td>Xiaomi 14 Ultra</td><td>Xiaomi</td><td>2024</td><td>Flagship</td><td>16</td><td>1499</td><td>5000</td></tr>
+        <tr><td>ASUS ROG Phone 8 Pro</td><td>ASUS</td><td>2024</td><td>Flagship</td><td>24</td><td>1199</td><td>6000</td></tr>
+        <tr><td>iPhone 14 Pro</td><td>Apple</td><td>2022</td><td>Flagship</td><td>6</td><td>1099</td><td>3200</td></tr>
+        <tr><td>Samsung Galaxy S23 Ultra</td><td>Samsung</td><td>2023</td><td>Flagship</td><td>12</td><td>1259</td><td>5000</td></tr>
+        <tr><td>Xiaomi 13 Pro</td><td>Xiaomi</td><td>2023</td><td>Flagship</td><td>12</td><td>1299</td><td>4820</td></tr>
+        <tr><td>iPhone SE (2022)</td><td>Apple</td><td>2022</td><td>Mid-range</td><td>4</td><td>529</td><td>2018</td></tr>
+        <tr><td>Samsung Galaxy A54</td><td>Samsung</td><td>2023</td><td>Mid-range</td><td>8</td><td>449</td><td>5000</td></tr>
+        <tr><td>Google Pixel 7a</td><td>Google</td><td>2023</td><td>Mid-range</td><td>8</td><td>509</td><td>4385</td></tr>
+        <tr><td>OnePlus Nord 3</td><td>OnePlus</td><td>2023</td><td>Mid-range</td><td>8</td><td>399</td><td>5000</td></tr>
+        <tr><td>Xiaomi 13T</td><td>Xiaomi</td><td>2023</td><td>Mid-range</td><td>8</td><td>649</td><td>5000</td></tr>
+        <tr><td>Motorola Edge 40</td><td>Motorola</td><td>2023</td><td>Mid-range</td><td>8</td><td>399</td><td>4400</td></tr>
+        <tr><td>Nokia G60</td><td>Nokia</td><td>2022</td><td>Mid-range</td><td>6</td><td>359</td><td>4500</td></tr>
+        <tr><td>Realme GT 5</td><td>Realme</td><td>2023</td><td>Mid-range</td><td>8</td><td>499</td><td>5000</td></tr>
+        <tr><td>OPPO Reno 11</td><td>OPPO</td><td>2024</td><td>Mid-range</td><td>12</td><td>479</td><td>4800</td></tr>
+        <tr><td>Nothing Phone (2)</td><td>Nothing</td><td>2023</td><td>Mid-range</td><td>12</td><td>679</td><td>4700</td></tr>
+        <tr><td>Samsung Galaxy A35</td><td>Samsung</td><td>2024</td><td>Mid-range</td><td>6</td><td>389</td><td>5000</td></tr>
+        <tr><td>Xiaomi Redmi Note 13 Pro+</td><td>Xiaomi</td><td>2024</td><td>Mid-range</td><td>12</td><td>449</td><td>5000</td></tr>
+        <tr><td>Motorola Moto G84</td><td>Motorola</td><td>2023</td><td>Mid-range</td><td>12</td><td>299</td><td>5000</td></tr>
+        <tr><td>Google Pixel 6a</td><td>Google</td><td>2022</td><td>Mid-range</td><td>6</td><td>459</td><td>4410</td></tr>
+        <tr><td>Sony Xperia 10 V</td><td>Sony</td><td>2023</td><td>Mid-range</td><td>6</td><td>499</td><td>5000</td></tr>
+        <tr><td>Samsung Galaxy A15</td><td>Samsung</td><td>2024</td><td>Budget</td><td>4</td><td>199</td><td>5000</td></tr>
+        <tr><td>Xiaomi Redmi 13</td><td>Xiaomi</td><td>2024</td><td>Budget</td><td>8</td><td>229</td><td>5030</td></tr>
+        <tr><td>Motorola Moto G14</td><td>Motorola</td><td>2023</td><td>Budget</td><td>4</td><td>149</td><td>5000</td></tr>
+        <tr><td>Nokia C32</td><td>Nokia</td><td>2023</td><td>Budget</td><td>4</td><td>129</td><td>5000</td></tr>
+        <tr><td>Realme C55</td><td>Realme</td><td>2023</td><td>Budget</td><td>6</td><td>179</td><td>5000</td></tr>
+        <tr><td>iPhone 15</td><td>Apple</td><td>2023</td><td>Flagship</td><td>6</td><td>979</td><td>3877</td></tr>
+        <tr><td>Samsung Galaxy S24+</td><td>Samsung</td><td>2024</td><td>Flagship</td><td>12</td><td>1319</td><td>4900</td></tr>
+        <tr><td>OnePlus 11</td><td>OnePlus</td><td>2023</td><td>Flagship</td><td>16</td><td>799</td><td>5000</td></tr>
+        <tr><td>ASUS Zenfone 10</td><td>ASUS</td><td>2023</td><td>Flagship</td><td>8</td><td>799</td><td>4300</td></tr>
+        <tr><td>iPhone 13</td><td>Apple</td><td>2021</td><td>Flagship</td><td>4</td><td>799</td><td>3227</td></tr>
+        <tr><td>Samsung Galaxy S22</td><td>Samsung</td><td>2022</td><td>Flagship</td><td>8</td><td>849</td><td>3700</td></tr>
+        <tr><td>Google Pixel 8</td><td>Google</td><td>2023</td><td>Flagship</td><td>8</td><td>799</td><td>4575</td></tr>
+        <tr><td>Vivo X100 Pro</td><td>Vivo</td><td>2023</td><td>Flagship</td><td>16</td><td>1099</td><td>5400</td></tr>
+        <tr><td>OPPO Find X7 Ultra</td><td>OPPO</td><td>2024</td><td>Flagship</td><td>16</td><td>1199</td><td>5000</td></tr>
+        <tr><td>Huawei P60 Pro</td><td>Huawei</td><td>2023</td><td>Flagship</td><td>12</td><td>1199</td><td>5000</td></tr>
+        <tr><td>Samsung Galaxy A34</td><td>Samsung</td><td>2023</td><td>Mid-range</td><td>6</td><td>369</td><td>5000</td></tr>
+        <tr><td>Xiaomi Redmi Note 12</td><td>Xiaomi</td><td>2023</td><td>Mid-range</td><td>4</td><td>279</td><td>5000</td></tr>
+        <tr><td>OnePlus Nord CE 3 Lite</td><td>OnePlus</td><td>2023</td><td>Mid-range</td><td>8</td><td>299</td><td>5000</td></tr>
+        <tr><td>Motorola Edge 30</td><td>Motorola</td><td>2022</td><td>Mid-range</td><td>8</td><td>349</td><td>4020</td></tr>
+        <tr><td>Nokia XR21</td><td>Nokia</td><td>2023</td><td>Mid-range</td><td>6</td><td>599</td><td>4800</td></tr>
+        <tr><td>Realme 11 Pro+</td><td>Realme</td><td>2023</td><td>Mid-range</td><td>12</td><td>399</td><td>5000</td></tr>
+        <tr><td>Google Pixel 7</td><td>Google</td><td>2022</td><td>Mid-range</td><td>8</td><td>649</td><td>4355</td></tr>
+        <tr><td>Sony Xperia 5 V</td><td>Sony</td><td>2023</td><td>Flagship</td><td>8</td><td>999</td><td>5000</td></tr>
+        <tr><td>iPhone 15 Plus</td><td>Apple</td><td>2023</td><td>Flagship</td><td>6</td><td>1129</td><td>4383</td></tr>
+        <tr><td>Huawei Nova 11 Pro</td><td>Huawei</td><td>2023</td><td>Mid-range</td><td>8</td><td>549</td><td>4000</td></tr>
+        <tr><td>Samsung Galaxy A25</td><td>Samsung</td><td>2024</td><td>Mid-range</td><td>6</td><td>299</td><td>5000</td></tr>
+        <tr><td>Xiaomi Poco F5</td><td>Xiaomi</td><td>2023</td><td>Mid-range</td><td>8</td><td>399</td><td>5000</td></tr>
+        <tr><td>Motorola Moto G73</td><td>Motorola</td><td>2023</td><td>Mid-range</td><td>8</td><td>249</td><td>5000</td></tr>
+        <tr><td>Nothing Phone (1)</td><td>Nothing</td><td>2022</td><td>Mid-range</td><td>8</td><td>469</td><td>4500</td></tr>
+        <tr><td>Vivo V29</td><td>Vivo</td><td>2023</td><td>Mid-range</td><td>12</td><td>449</td><td>4600</td></tr>
+        <tr><td>Realme C53</td><td>Realme</td><td>2023</td><td>Budget</td><td>6</td><td>159</td><td>5000</td></tr>
+        <tr><td>Nokia G42</td><td>Nokia</td><td>2023</td><td>Budget</td><td>6</td><td>199</td><td>5000</td></tr>
+        <tr><td>Samsung Galaxy A05s</td><td>Samsung</td><td>2023</td><td>Budget</td><td>4</td><td>179</td><td>5000</td></tr>
+        <tr><td>Xiaomi Redmi 12</td><td>Xiaomi</td><td>2023</td><td>Budget</td><td>8</td><td>189</td><td>5000</td></tr>
+        <tr><td>Motorola Moto E13</td><td>Motorola</td><td>2023</td><td>Budget</td><td>2</td><td>99</td><td>5000</td></tr>
+        <tr><td>OPPO A78</td><td>OPPO</td><td>2023</td><td>Budget</td><td>8</td><td>249</td><td>4500</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 30;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody   = document.querySelector('tbody');
+  const allRows = Array.from(tbody.querySelectorAll('tr'));
+  const countEl = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel  = document.getElementById('col-filter');
+  const pagDiv  = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    pagDiv.innerHTML = '';
+    pageRange(currentPage, pages).forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur - 1); i <= Math.min(tot - 1, cur + 1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>
