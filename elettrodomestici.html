@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Elettrodomestici – ScrapLab</title>
+
+<style>
+  :root {
+    --primary: #0369a1;
+    --primary-light: #7dd3fc;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); color: var(--text); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f0f9ff; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 ScrapLab</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="hardware.html">Hardware – GPU &amp; CPU</a>
+  <a href="stati.html">Indicatori Globali degli Stati</a>
+  <a href="libri.html">Classifica Libri</a>
+  <a href="film.html">Database Film</a>
+  <a href="calciatori.html">Statistiche Calciatori</a>
+  <a href="missioni_spaziali.html">Missioni Spaziali</a>
+  <a href="farmaci.html">Farmaci e Principi Attivi</a>
+  <a href="smartphone.html">Database Smartphone</a>
+  <a href="laptop.html">Database Laptop</a>
+  <a href="automobili.html">Database Automobili</a>
+  <a href="ristoranti.html">Database Ristoranti</a>
+  <a href="concerti.html">Database Concerti</a>
+  <a href="elettrodomestici.html" class="active">Database Elettrodomestici</a>
+</nav>
+
+<main>
+  <h1>Database Elettrodomestici</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter">
+      <option value="-1">Tutte le colonne</option>
+      <option value="0">Prodotto</option>
+      <option value="1">Marca</option>
+      <option value="2">Data Uscita</option>
+      <option value="3">Categoria</option>
+      <option value="4">Classe Energetica</option>
+      <option value="5">Prezzo (€)</option>
+      <option value="6">Garanzia (anni)</option>
+    </select>
+    <span class="badge" id="row-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Prodotto</th>
+          <th>Marca</th>
+          <th>Data Uscita</th>
+          <th>Categoria</th>
+          <th>Classe Energetica</th>
+          <th>Prezzo (€)</th>
+          <th>Garanzia (anni)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Samsung RB38T600ESA</td><td>Samsung</td><td>12/03/2021</td><td>Frigorifero</td><td>E</td><td>699€</td><td>2</td></tr>
+        <tr><td>Bosch KGN39VLCT</td><td>Bosch</td><td>05/09/2022</td><td>Frigorifero</td><td>C</td><td>849€</td><td>2</td></tr>
+        <tr><td>LG GBB72PZEFN</td><td>LG</td><td>18/01/2023</td><td>Frigorifero</td><td>D</td><td>779€</td><td>2</td></tr>
+        <tr><td>Whirlpool W7X 82O OX</td><td>Whirlpool</td><td>07/06/2022</td><td>Frigorifero</td><td>E</td><td>599€</td><td>2</td></tr>
+        <tr><td>Liebherr CNsfd 5723</td><td>Liebherr</td><td>14/04/2023</td><td>Frigorifero</td><td>C</td><td>1299€</td><td>5</td></tr>
+        <tr><td>Electrolux EW8F294S</td><td>Electrolux</td><td>22/02/2022</td><td>Lavatrice</td><td>A</td><td>649€</td><td>2</td></tr>
+        <tr><td>Samsung WW90T986DSH</td><td>Samsung</td><td>10/07/2021</td><td>Lavatrice</td><td>A</td><td>899€</td><td>3</td></tr>
+        <tr><td>Bosch WAX32M40IT</td><td>Bosch</td><td>03/03/2023</td><td>Lavatrice</td><td>A</td><td>999€</td><td>2</td></tr>
+        <tr><td>LG F4WR9009S3W</td><td>LG</td><td>19/11/2022</td><td>Lavatrice</td><td>A</td><td>749€</td><td>2</td></tr>
+        <tr><td>Indesit MTWSA 61294 WK</td><td>Indesit</td><td>08/05/2021</td><td>Lavatrice</td><td>B</td><td>349€</td><td>2</td></tr>
+        <tr><td>Whirlpool W6 W045WB IT</td><td>Whirlpool</td><td>25/08/2022</td><td>Lavatrice</td><td>A</td><td>499€</td><td>2</td></tr>
+        <tr><td>Bosch SMS6ZCI49E</td><td>Bosch</td><td>11/01/2023</td><td>Lavastoviglie</td><td>B</td><td>799€</td><td>2</td></tr>
+        <tr><td>Samsung DW60BG830FSLET</td><td>Samsung</td><td>30/09/2022</td><td>Lavastoviglie</td><td>B</td><td>699€</td><td>2</td></tr>
+        <tr><td>Electrolux EES48200L</td><td>Electrolux</td><td>14/04/2022</td><td>Lavastoviglie</td><td>C</td><td>549€</td><td>2</td></tr>
+        <tr><td>Candy CDPN 2D520PX</td><td>Candy</td><td>06/07/2021</td><td>Lavastoviglie</td><td>E</td><td>329€</td><td>2</td></tr>
+        <tr><td>Miele G 7315 SCi AutoDos</td><td>Miele</td><td>20/02/2023</td><td>Lavastoviglie</td><td>B</td><td>1499€</td><td>5</td></tr>
+        <tr><td>Bosch HBA574BR0</td><td>Bosch</td><td>15/06/2022</td><td>Forno</td><td>A+</td><td>549€</td><td>2</td></tr>
+        <tr><td>Electrolux EOB8S39WX</td><td>Electrolux</td><td>09/03/2023</td><td>Forno</td><td>A+</td><td>499€</td><td>2</td></tr>
+        <tr><td>Whirlpool W7 OM4 4S1 H</td><td>Whirlpool</td><td>27/10/2021</td><td>Forno</td><td>A</td><td>399€</td><td>2</td></tr>
+        <tr><td>Samsung NV7B5755SAK</td><td>Samsung</td><td>18/05/2023</td><td>Forno</td><td>A+</td><td>749€</td><td>2</td></tr>
+        <tr><td>Miele H 2861 B</td><td>Miele</td><td>04/01/2022</td><td>Forno</td><td>A+</td><td>1299€</td><td>5</td></tr>
+        <tr><td>Dyson V15 Detect</td><td>Dyson</td><td>26/03/2021</td><td>Aspirapolvere</td><td>A</td><td>749€</td><td>2</td></tr>
+        <tr><td>iRobot Roomba j7+</td><td>iRobot</td><td>12/09/2021</td><td>Aspirapolvere</td><td>A</td><td>899€</td><td>1</td></tr>
+        <tr><td>Samsung Bespoke Jet AI</td><td>Samsung</td><td>07/02/2023</td><td>Aspirapolvere</td><td>A</td><td>699€</td><td>2</td></tr>
+        <tr><td>Rowenta X-Force Flex 15.60</td><td>Rowenta</td><td>14/11/2022</td><td>Aspirapolvere</td><td>A</td><td>449€</td><td>2</td></tr>
+        <tr><td>Bosch BGS5A225</td><td>Bosch</td><td>22/04/2021</td><td>Aspirapolvere</td><td>A</td><td>299€</td><td>2</td></tr>
+        <tr><td>Bosch WTW85231IT</td><td>Bosch</td><td>08/08/2022</td><td>Asciugatrice</td><td>A+</td><td>799€</td><td>2</td></tr>
+        <tr><td>Samsung DV90BB9445GHS3</td><td>Samsung</td><td>17/03/2023</td><td>Asciugatrice</td><td>A+</td><td>999€</td><td>3</td></tr>
+        <tr><td>LG RC90V9AV2W</td><td>LG</td><td>30/06/2022</td><td>Asciugatrice</td><td>A+</td><td>849€</td><td>2</td></tr>
+        <tr><td>Electrolux EW9H283BY</td><td>Electrolux</td><td>11/01/2022</td><td>Asciugatrice</td><td>A+</td><td>749€</td><td>2</td></tr>
+        <tr><td>Candy CS C9DF-S</td><td>Candy</td><td>05/05/2021</td><td>Asciugatrice</td><td>B</td><td>449€</td><td>2</td></tr>
+        <tr><td>Samsung QE65S95CATXZT</td><td>Samsung</td><td>24/02/2023</td><td>Televisore</td><td>G</td><td>2299€</td><td>2</td></tr>
+        <tr><td>LG OLED65G36LA</td><td>LG</td><td>16/03/2023</td><td>Televisore</td><td>G</td><td>1999€</td><td>2</td></tr>
+        <tr><td>Sony XR-65A95L</td><td>Sony</td><td>01/06/2023</td><td>Televisore</td><td>G</td><td>2499€</td><td>2</td></tr>
+        <tr><td>Philips 65PUS8818</td><td>Philips</td><td>09/04/2023</td><td>Televisore</td><td>G</td><td>999€</td><td>2</td></tr>
+        <tr><td>Hisense 65U8KQ</td><td>Hisense</td><td>20/05/2023</td><td>Televisore</td><td>G</td><td>799€</td><td>2</td></tr>
+        <tr><td>De'Longhi La Specialista</td><td>De'Longhi</td><td>03/10/2021</td><td>Macchina Caffè</td><td>A</td><td>699€</td><td>2</td></tr>
+        <tr><td>Nespresso Vertuo Next</td><td>Nespresso</td><td>17/04/2022</td><td>Macchina Caffè</td><td>A</td><td>149€</td><td>2</td></tr>
+        <tr><td>Philips EP5447/90</td><td>Philips</td><td>28/01/2022</td><td>Macchina Caffè</td><td>A</td><td>599€</td><td>2</td></tr>
+        <tr><td>Smeg ECF01RDEU</td><td>Smeg</td><td>12/06/2021</td><td>Macchina Caffè</td><td>A</td><td>449€</td><td>2</td></tr>
+        <tr><td>Jura E8 Piano Black</td><td>Jura</td><td>08/09/2022</td><td>Macchina Caffè</td><td>A</td><td>1299€</td><td>2</td></tr>
+        <tr><td>Bosch MFQ4020</td><td>Bosch</td><td>15/02/2022</td><td>Piccoli Elettrodomestici</td><td>A</td><td>49€</td><td>2</td></tr>
+        <tr><td>KitchenAid Artisan 5KSM175</td><td>KitchenAid</td><td>22/09/2021</td><td>Piccoli Elettrodomestici</td><td>A</td><td>599€</td><td>5</td></tr>
+        <tr><td>Philips Airfryer XXL HD9762</td><td>Philips</td><td>06/04/2022</td><td>Piccoli Elettrodomestici</td><td>A</td><td>229€</td><td>2</td></tr>
+        <tr><td>Tefal OptiGrill GC722D</td><td>Tefal</td><td>19/11/2021</td><td>Piccoli Elettrodomestici</td><td>A</td><td>149€</td><td>2</td></tr>
+        <tr><td>De'Longhi Multicuisine CK900</td><td>De'Longhi</td><td>30/08/2022</td><td>Piccoli Elettrodomestici</td><td>A</td><td>199€</td><td>2</td></tr>
+        <tr><td>Dyson Pure Hot+Cool HP09</td><td>Dyson</td><td>11/10/2022</td><td>Climatizzazione</td><td>A+</td><td>649€</td><td>2</td></tr>
+        <tr><td>De'Longhi Pinguino PAC AN112</td><td>De'Longhi</td><td>04/03/2023</td><td>Climatizzazione</td><td>A</td><td>499€</td><td>2</td></tr>
+        <tr><td>Rowenta Intense Pure Air XL</td><td>Rowenta</td><td>25/01/2022</td><td>Climatizzazione</td><td>A+</td><td>299€</td><td>2</td></tr>
+        <tr><td>Olimpia Splendid Nexya S5</td><td>Olimpia Splendid</td><td>17/07/2021</td><td>Climatizzazione</td><td>A+</td><td>899€</td><td>3</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 25;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody    = document.querySelector('tbody');
+  const allRows  = Array.from(tbody.querySelectorAll('tr'));
+  const countEl  = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel   = document.getElementById('col-filter');
+  const pagDiv   = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    pagDiv.innerHTML = '';
+    pageRange(currentPage, pages).forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur - 1); i <= Math.min(tot - 1, cur + 1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>

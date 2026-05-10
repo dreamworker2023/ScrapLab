@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Concerti – ScrapLab</title>
+
+<style>
+  :root {
+    --primary: #6d28d9;
+    --primary-light: #a78bfa;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); color: var(--text); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #f5f3ff; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 ScrapLab</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="hardware.html">Hardware – GPU &amp; CPU</a>
+  <a href="stati.html">Indicatori Globali degli Stati</a>
+  <a href="libri.html">Classifica Libri</a>
+  <a href="film.html">Database Film</a>
+  <a href="calciatori.html">Statistiche Calciatori</a>
+  <a href="missioni_spaziali.html">Missioni Spaziali</a>
+  <a href="farmaci.html">Farmaci e Principi Attivi</a>
+  <a href="smartphone.html">Database Smartphone</a>
+  <a href="laptop.html">Database Laptop</a>
+  <a href="automobili.html">Database Automobili</a>
+  <a href="ristoranti.html">Database Ristoranti</a>
+  <a href="concerti.html" class="active">Database Concerti</a>
+</nav>
+
+<main>
+  <h1>Database Concerti</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter">
+      <option value="-1">Tutte le colonne</option>
+      <option value="0">Artista</option>
+      <option value="1">Città</option>
+      <option value="2">Data Concerto</option>
+      <option value="3">Genere</option>
+      <option value="4">Venue</option>
+      <option value="5">Prezzo Biglietto (€)</option>
+      <option value="6">Biglietti Venduti</option>
+    </select>
+    <span class="badge" id="row-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Artista</th>
+          <th>Città</th>
+          <th>Data Concerto</th>
+          <th>Genere</th>
+          <th>Venue</th>
+          <th>Prezzo Biglietto (€)</th>
+          <th>Biglietti Venduti</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Vasco Rossi</td><td>Milano</td><td>15/06/2023</td><td>Rock</td><td>San Siro</td><td>85€</td><td>78000</td></tr>
+        <tr><td>Laura Pausini</td><td>Roma</td><td>22/07/2023</td><td>Pop</td><td>Circo Massimo</td><td>75€</td><td>65000</td></tr>
+        <tr><td>Måneskin</td><td>Torino</td><td>08/07/2023</td><td>Rock</td><td>Stupinigi Sonic Park</td><td>65€</td><td>45000</td></tr>
+        <tr><td>Coldplay</td><td>Milano</td><td>25/06/2023</td><td>Pop Rock</td><td>San Siro</td><td>120€</td><td>80000</td></tr>
+        <tr><td>Ed Sheeran</td><td>Roma</td><td>14/07/2023</td><td>Pop</td><td>Stadio Olimpico</td><td>95€</td><td>70000</td></tr>
+        <tr><td>Billie Eilish</td><td>Milano</td><td>03/11/2023</td><td>Pop</td><td>Mediolanum Forum</td><td>89€</td><td>12000</td></tr>
+        <tr><td>Ultimo</td><td>Napoli</td><td>30/06/2023</td><td>Pop</td><td>Stadio Maradona</td><td>55€</td><td>55000</td></tr>
+        <tr><td>Elton John</td><td>Roma</td><td>18/07/2023</td><td>Pop</td><td>Circo Massimo</td><td>110€</td><td>60000</td></tr>
+        <tr><td>Ligabue</td><td>Bologna</td><td>17/06/2023</td><td>Rock</td><td>Stadio Renato Dall'Ara</td><td>60€</td><td>38000</td></tr>
+        <tr><td>Eros Ramazzotti</td><td>Firenze</td><td>28/06/2023</td><td>Pop</td><td>Stadio Artemio Franchi</td><td>70€</td><td>42000</td></tr>
+        <tr><td>Dua Lipa</td><td>Roma</td><td>11/06/2023</td><td>Pop</td><td>Palazzo dello Sport</td><td>85€</td><td>18000</td></tr>
+        <tr><td>Harry Styles</td><td>Torino</td><td>24/06/2023</td><td>Pop</td><td>Pala Alpitour</td><td>90€</td><td>15000</td></tr>
+        <tr><td>Tiziano Ferro</td><td>Napoli</td><td>04/07/2023</td><td>Pop</td><td>Stadio Maradona</td><td>75€</td><td>60000</td></tr>
+        <tr><td>Arctic Monkeys</td><td>Milano</td><td>16/07/2023</td><td>Rock</td><td>Ippodromo SNAI</td><td>70€</td><td>35000</td></tr>
+        <tr><td>Muse</td><td>Bologna</td><td>07/07/2023</td><td>Rock</td><td>Unipol Arena</td><td>80€</td><td>14000</td></tr>
+        <tr><td>Imagine Dragons</td><td>Torino</td><td>03/07/2023</td><td>Rock</td><td>Stadio Grande Torino</td><td>75€</td><td>30000</td></tr>
+        <tr><td>Depeche Mode</td><td>Roma</td><td>11/07/2023</td><td>Electronic</td><td>Stadio Olimpico</td><td>90€</td><td>55000</td></tr>
+        <tr><td>Stromae</td><td>Milano</td><td>14/03/2023</td><td>Electronic</td><td>Mediolanum Forum</td><td>65€</td><td>11000</td></tr>
+        <tr><td>Bruce Springsteen</td><td>Ferrara</td><td>18/05/2023</td><td>Rock</td><td>Parco Urbano Bassani</td><td>95€</td><td>42000</td></tr>
+        <tr><td>Beyoncé</td><td>Milano</td><td>23/05/2023</td><td>R&amp;B</td><td>San Siro</td><td>130€</td><td>75000</td></tr>
+        <tr><td>Taylor Swift</td><td>Milano</td><td>13/07/2024</td><td>Pop</td><td>San Siro</td><td>150€</td><td>80000</td></tr>
+        <tr><td>The Weeknd</td><td>Milano</td><td>21/07/2023</td><td>R&amp;B</td><td>San Siro</td><td>105€</td><td>72000</td></tr>
+        <tr><td>Radiohead</td><td>Milano</td><td>29/06/2024</td><td>Rock</td><td>Ippodromo SNAI</td><td>85€</td><td>38000</td></tr>
+        <tr><td>Pearl Jam</td><td>Imola</td><td>05/06/2024</td><td>Rock</td><td>Autodromo Enzo e Dino Ferrari</td><td>90€</td><td>48000</td></tr>
+        <tr><td>Nick Cave</td><td>Bologna</td><td>11/07/2024</td><td>Rock</td><td>Piazza Maggiore</td><td>60€</td><td>8000</td></tr>
+        <tr><td>Rihanna</td><td>Roma</td><td>15/05/2024</td><td>R&amp;B</td><td>Stadio Olimpico</td><td>140€</td><td>70000</td></tr>
+        <tr><td>Drake</td><td>Milano</td><td>08/02/2024</td><td>Hip-Hop</td><td>Mediolanum Forum</td><td>115€</td><td>13000</td></tr>
+        <tr><td>Kendrick Lamar</td><td>Torino</td><td>17/06/2024</td><td>Hip-Hop</td><td>Pala Alpitour</td><td>95€</td><td>14000</td></tr>
+        <tr><td>Post Malone</td><td>Milano</td><td>28/03/2024</td><td>Hip-Hop</td><td>Mediolanum Forum</td><td>85€</td><td>12000</td></tr>
+        <tr><td>Pinguini Tattici Nucleari</td><td>Bologna</td><td>22/06/2024</td><td>Rock</td><td>Stadio Renato Dall'Ara</td><td>50€</td><td>35000</td></tr>
+        <tr><td>Irama</td><td>Napoli</td><td>08/06/2024</td><td>Pop</td><td>Stadio Maradona</td><td>45€</td><td>40000</td></tr>
+        <tr><td>Annalisa</td><td>Milano</td><td>01/06/2024</td><td>Pop</td><td>Mediolanum Forum</td><td>55€</td><td>14000</td></tr>
+        <tr><td>Ghali</td><td>Torino</td><td>14/06/2024</td><td>Hip-Hop</td><td>Pala Alpitour</td><td>48€</td><td>12000</td></tr>
+        <tr><td>Marco Mengoni</td><td>Roma</td><td>28/06/2024</td><td>Pop</td><td>Stadio Olimpico</td><td>60€</td><td>55000</td></tr>
+        <tr><td>Pink</td><td>Milano</td><td>15/06/2024</td><td>Pop Rock</td><td>San Siro</td><td>100€</td><td>72000</td></tr>
+        <tr><td>Green Day</td><td>Padova</td><td>12/06/2024</td><td>Punk Rock</td><td>Kioene Arena</td><td>75€</td><td>28000</td></tr>
+        <tr><td>The Rolling Stones</td><td>Roma</td><td>07/07/2024</td><td>Rock</td><td>Circo Massimo</td><td>180€</td><td>65000</td></tr>
+        <tr><td>Metallica</td><td>Firenze</td><td>02/06/2024</td><td>Metal</td><td>Stadio Artemio Franchi</td><td>110€</td><td>40000</td></tr>
+        <tr><td>Iron Maiden</td><td>Bologna</td><td>18/06/2024</td><td>Metal</td><td>Unipol Arena</td><td>85€</td><td>16000</td></tr>
+        <tr><td>Lana Del Rey</td><td>Roma</td><td>20/06/2024</td><td>Pop</td><td>Terme di Caracalla</td><td>80€</td><td>6000</td></tr>
+        <tr><td>Doja Cat</td><td>Milano</td><td>30/03/2024</td><td>R&amp;B</td><td>Mediolanum Forum</td><td>75€</td><td>12000</td></tr>
+        <tr><td>Sam Smith</td><td>Torino</td><td>22/03/2024</td><td>Pop</td><td>Pala Alpitour</td><td>70€</td><td>11000</td></tr>
+        <tr><td>Kylie Minogue</td><td>Milano</td><td>09/04/2024</td><td>Pop</td><td>Mediolanum Forum</td><td>85€</td><td>13000</td></tr>
+        <tr><td>Oasis</td><td>Napoli</td><td>04/07/2025</td><td>Rock</td><td>Stadio Maradona</td><td>125€</td><td>55000</td></tr>
+        <tr><td>Zucchero</td><td>Roma</td><td>12/07/2024</td><td>Blues Rock</td><td>Terme di Caracalla</td><td>65€</td><td>7000</td></tr>
+        <tr><td>Subsonica</td><td>Torino</td><td>20/07/2024</td><td>Electronic Rock</td><td>Teatro Regio</td><td>40€</td><td>2500</td></tr>
+        <tr><td>Carmen Consoli</td><td>Catania</td><td>15/08/2024</td><td>Folk Rock</td><td>Villa Bellini</td><td>35€</td><td>5000</td></tr>
+        <tr><td>Ludovico Einaudi</td><td>Milano</td><td>03/10/2024</td><td>Classica</td><td>Teatro alla Scala</td><td>95€</td><td>2000</td></tr>
+        <tr><td>Adriano Celentano</td><td>Milano</td><td>05/05/2024</td><td>Pop</td><td>San Siro</td><td>90€</td><td>70000</td></tr>
+        <tr><td>Ermal Meta</td><td>Bari</td><td>10/07/2024</td><td>Pop Rock</td><td>Stadio San Nicola</td><td>45€</td><td>32000</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 25;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody    = document.querySelector('tbody');
+  const allRows  = Array.from(tbody.querySelectorAll('tr'));
+  const countEl  = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel   = document.getElementById('col-filter');
+  const pagDiv   = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    pagDiv.innerHTML = '';
+    pageRange(currentPage, pages).forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur - 1); i <= Math.min(tot - 1, cur + 1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>
