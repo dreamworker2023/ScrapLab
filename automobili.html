@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Automobili – ScrapLab</title>
+
+<style>
+  :root {
+    --primary: #b45309;
+    --primary-light: #fbbf24;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); color: var(--text); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #fffbeb; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 ScrapLab</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="hardware.html">Hardware – GPU &amp; CPU</a>
+  <a href="stati.html">Indicatori Globali degli Stati</a>
+  <a href="libri.html">Classifica Libri</a>
+  <a href="film.html">Database Film</a>
+  <a href="calciatori.html">Statistiche Calciatori</a>
+  <a href="missioni_spaziali.html">Missioni Spaziali</a>
+  <a href="farmaci.html">Farmaci e Principi Attivi</a>
+  <a href="smartphone.html">Database Smartphone</a>
+  <a href="laptop.html">Database Laptop</a>
+  <a href="automobili.html" class="active">Database Automobili</a>
+  <a href="ristoranti.html">Database Ristoranti</a>
+</nav>
+
+<main>
+  <h1>Database Automobili</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter">
+      <option value="-1">Tutte le colonne</option>
+      <option value="0">Modello</option>
+      <option value="1">Marca</option>
+      <option value="2">Data Imm.</option>
+      <option value="3">Categoria</option>
+      <option value="4">Potenza (CV)</option>
+      <option value="5">Prezzo (€)</option>
+      <option value="6">Autonomia (km)</option>
+    </select>
+    <span class="badge" id="row-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Modello</th>
+          <th>Marca</th>
+          <th>Data Imm.</th>
+          <th>Categoria</th>
+          <th>Potenza (CV)</th>
+          <th>Prezzo (€)</th>
+          <th>Autonomia (km)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Fiat 500</td><td>Fiat</td><td>15/03/2022</td><td>Utilitaria</td><td>70</td><td>17500€</td><td>450</td></tr>
+        <tr><td>Fiat Panda</td><td>Fiat</td><td>08/01/2023</td><td>Utilitaria</td><td>70</td><td>14900€</td><td>500</td></tr>
+        <tr><td>Volkswagen Polo</td><td>Volkswagen</td><td>22/04/2022</td><td>Utilitaria</td><td>95</td><td>23400€</td><td>600</td></tr>
+        <tr><td>Renault Clio</td><td>Renault</td><td>17/06/2023</td><td>Utilitaria</td><td>91</td><td>20900€</td><td>550</td></tr>
+        <tr><td>Toyota Yaris</td><td>Toyota</td><td>05/02/2023</td><td>Utilitaria</td><td>116</td><td>23500€</td><td>600</td></tr>
+        <tr><td>Opel Corsa</td><td>Opel</td><td>11/07/2022</td><td>Utilitaria</td><td>75</td><td>19900€</td><td>520</td></tr>
+        <tr><td>Peugeot 208</td><td>Peugeot</td><td>28/03/2023</td><td>Utilitaria</td><td>75</td><td>21900€</td><td>530</td></tr>
+        <tr><td>Dacia Sandero</td><td>Dacia</td><td>14/09/2023</td><td>Utilitaria</td><td>90</td><td>13500€</td><td>480</td></tr>
+        <tr><td>SEAT Ibiza</td><td>SEAT</td><td>03/05/2022</td><td>Utilitaria</td><td>95</td><td>22100€</td><td>560</td></tr>
+        <tr><td>Hyundai i20</td><td>Hyundai</td><td>20/11/2023</td><td>Utilitaria</td><td>84</td><td>20500€</td><td>530</td></tr>
+        <tr><td>Volkswagen Golf</td><td>Volkswagen</td><td>10/01/2023</td><td>Berlina</td><td>130</td><td>29900€</td><td>650</td></tr>
+        <tr><td>BMW Serie 3</td><td>BMW</td><td>25/04/2023</td><td>Berlina</td><td>184</td><td>46900€</td><td>680</td></tr>
+        <tr><td>Mercedes Classe C</td><td>Mercedes</td><td>07/06/2022</td><td>Berlina</td><td>170</td><td>48500€</td><td>660</td></tr>
+        <tr><td>Audi A4</td><td>Audi</td><td>18/02/2022</td><td>Berlina</td><td>150</td><td>44900€</td><td>640</td></tr>
+        <tr><td>Toyota Corolla</td><td>Toyota</td><td>12/07/2023</td><td>Berlina</td><td>123</td><td>27900€</td><td>600</td></tr>
+        <tr><td>Honda Civic</td><td>Honda</td><td>30/08/2022</td><td>Berlina</td><td>158</td><td>31500€</td><td>620</td></tr>
+        <tr><td>Peugeot 308</td><td>Peugeot</td><td>06/03/2023</td><td>Berlina</td><td>130</td><td>28500€</td><td>610</td></tr>
+        <tr><td>Skoda Octavia</td><td>Skoda</td><td>14/10/2022</td><td>Berlina</td><td>150</td><td>28900€</td><td>620</td></tr>
+        <tr><td>SEAT Leon</td><td>SEAT</td><td>22/05/2023</td><td>Berlina</td><td>130</td><td>26900€</td><td>600</td></tr>
+        <tr><td>Ford Focus</td><td>Ford</td><td>09/01/2022</td><td>Berlina</td><td>125</td><td>25900€</td><td>590</td></tr>
+        <tr><td>Volkswagen Tiguan</td><td>Volkswagen</td><td>15/02/2023</td><td>SUV</td><td>150</td><td>39900€</td><td>620</td></tr>
+        <tr><td>BMW X3</td><td>BMW</td><td>27/04/2022</td><td>SUV</td><td>184</td><td>61900€</td><td>650</td></tr>
+        <tr><td>Mercedes GLC</td><td>Mercedes</td><td>03/08/2023</td><td>SUV</td><td>204</td><td>65800€</td><td>640</td></tr>
+        <tr><td>Audi Q5</td><td>Audi</td><td>19/09/2022</td><td>SUV</td><td>204</td><td>59900€</td><td>630</td></tr>
+        <tr><td>Kia Sportage</td><td>Kia</td><td>11/04/2023</td><td>SUV</td><td>150</td><td>32900€</td><td>610</td></tr>
+        <tr><td>Toyota RAV4</td><td>Toyota</td><td>29/06/2023</td><td>SUV</td><td>222</td><td>38900€</td><td>600</td></tr>
+        <tr><td>Dacia Duster</td><td>Dacia</td><td>07/01/2023</td><td>SUV</td><td>90</td><td>22900€</td><td>500</td></tr>
+        <tr><td>Nissan Qashqai</td><td>Nissan</td><td>23/03/2022</td><td>SUV</td><td>158</td><td>34900€</td><td>590</td></tr>
+        <tr><td>Peugeot 3008</td><td>Peugeot</td><td>16/10/2023</td><td>SUV</td><td>130</td><td>35500€</td><td>590</td></tr>
+        <tr><td>Jeep Renegade</td><td>Jeep</td><td>05/07/2022</td><td>SUV</td><td>130</td><td>29900€</td><td>560</td></tr>
+        <tr><td>Alfa Romeo Giulia QV</td><td>Alfa Romeo</td><td>14/02/2022</td><td>Sportiva</td><td>510</td><td>89900€</td><td>520</td></tr>
+        <tr><td>BMW M4</td><td>BMW</td><td>01/06/2023</td><td>Sportiva</td><td>510</td><td>99900€</td><td>480</td></tr>
+        <tr><td>Mercedes AMG C63</td><td>Mercedes</td><td>20/09/2022</td><td>Sportiva</td><td>476</td><td>98500€</td><td>490</td></tr>
+        <tr><td>Porsche 911</td><td>Porsche</td><td>08/03/2023</td><td>Sportiva</td><td>450</td><td>134900€</td><td>500</td></tr>
+        <tr><td>Ford Mustang</td><td>Ford</td><td>17/11/2022</td><td>Sportiva</td><td>450</td><td>58900€</td><td>520</td></tr>
+        <tr><td>Tesla Model 3</td><td>Tesla</td><td>24/01/2023</td><td>Elettrica</td><td>283</td><td>42990€</td><td>510</td></tr>
+        <tr><td>Tesla Model Y</td><td>Tesla</td><td>13/07/2023</td><td>Elettrica</td><td>299</td><td>47990€</td><td>533</td></tr>
+        <tr><td>BMW i4</td><td>BMW</td><td>06/04/2022</td><td>Elettrica</td><td>340</td><td>65900€</td><td>590</td></tr>
+        <tr><td>Volkswagen ID.4</td><td>Volkswagen</td><td>18/05/2023</td><td>Elettrica</td><td>204</td><td>44990€</td><td>520</td></tr>
+        <tr><td>Hyundai Ioniq 5</td><td>Hyundai</td><td>02/08/2022</td><td>Elettrica</td><td>218</td><td>49900€</td><td>507</td></tr>
+        <tr><td>Kia EV6</td><td>Kia</td><td>27/02/2023</td><td>Elettrica</td><td>229</td><td>47900€</td><td>504</td></tr>
+        <tr><td>Renault Megane E-Tech</td><td>Renault</td><td>11/06/2022</td><td>Elettrica</td><td>220</td><td>39990€</td><td>470</td></tr>
+        <tr><td>Fiat 500e</td><td>Fiat</td><td>29/01/2022</td><td>Elettrica</td><td>118</td><td>29900€</td><td>320</td></tr>
+        <tr><td>Peugeot e-208</td><td>Peugeot</td><td>04/04/2023</td><td>Elettrica</td><td>136</td><td>34990€</td><td>362</td></tr>
+        <tr><td>Audi e-tron</td><td>Audi</td><td>16/12/2022</td><td>Elettrica</td><td>300</td><td>78900€</td><td>520</td></tr>
+        <tr><td>Volkswagen Passat</td><td>Volkswagen</td><td>08/03/2022</td><td>Familiare</td><td>150</td><td>37900€</td><td>700</td></tr>
+        <tr><td>BMW Serie 5 Touring</td><td>BMW</td><td>21/09/2023</td><td>Familiare</td><td>184</td><td>68900€</td><td>720</td></tr>
+        <tr><td>Volvo V60</td><td>Volvo</td><td>15/05/2023</td><td>Familiare</td><td>190</td><td>52900€</td><td>680</td></tr>
+        <tr><td>Skoda Superb Combi</td><td>Skoda</td><td>07/07/2022</td><td>Familiare</td><td>150</td><td>36900€</td><td>720</td></tr>
+        <tr><td>Audi A6 Avant</td><td>Audi</td><td>30/01/2023</td><td>Familiare</td><td>204</td><td>69900€</td><td>700</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 25;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody    = document.querySelector('tbody');
+  const allRows  = Array.from(tbody.querySelectorAll('tr'));
+  const countEl  = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel   = document.getElementById('col-filter');
+  const pagDiv   = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    pagDiv.innerHTML = '';
+    pageRange(currentPage, pages).forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur - 1); i <= Math.min(tot - 1, cur + 1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>

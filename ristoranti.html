@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Database Ristoranti – ScrapLab</title>
+
+<style>
+  :root {
+    --primary: #be123c;
+    --primary-light: #fb7185;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --radius: 12px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); }
+
+  /* ── NAV ── */
+  nav {
+    background: var(--primary);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 8px rgba(0,0,0,.2);
+  }
+  nav .brand { color: #fff; font-weight: 700; font-size: 1.1rem; padding: 1rem 0; margin-right: auto; }
+  nav a {
+    color: rgba(255,255,255,.8);
+    text-decoration: none;
+    padding: .75rem .9rem;
+    border-radius: 6px;
+    font-size: .9rem;
+    transition: background .2s, color .2s;
+  }
+  nav a:hover, nav a.active { background: rgba(255,255,255,.15); color: #fff; }
+
+  /* ── MAIN ── */
+  main { max-width: 1300px; margin: 2rem auto; padding: 0 1.5rem; }
+  h1 { font-size: 1.6rem; margin-bottom: 1.25rem; color: var(--primary); }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: .75rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+  .controls input[type=text] {
+    flex: 1; min-width: 220px;
+    padding: .5rem .9rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    outline: none;
+    transition: border .2s;
+  }
+  .controls input[type=text]:focus { border-color: var(--primary-light); }
+  .controls select {
+    padding: .5rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: .9rem;
+    background: var(--card);
+    cursor: pointer;
+  }
+  .badge {
+    background: var(--primary);
+    color: #fff;
+    border-radius: 20px;
+    padding: .25rem .75rem;
+    font-size: .8rem;
+    margin-left: auto;
+  }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: 0 1px 4px rgba(0,0,0,.08);
+    overflow-x: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+  thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: .75rem 1rem;
+    text-align: left;
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    position: sticky; top: 0;
+  }
+  thead th:hover { background: var(--primary-light); color: var(--text); }
+  thead th.sort-asc::after  { content: " ▲"; font-size: .7rem; }
+  thead th.sort-desc::after { content: " ▼"; font-size: .7rem; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .15s; }
+  tbody tr:hover { background: #fff1f2; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: .65rem 1rem; }
+  .no-results { text-align: center; padding: 2rem; color: var(--muted); font-style: italic; }
+
+  /* ── PAGINATION ── */
+  .pagination {
+    display: flex;
+    justify-content: center;
+    gap: .4rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .pagination button {
+    padding: .4rem .8rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+    font-size: .85rem;
+    transition: all .2s;
+  }
+  .pagination button:hover, .pagination button.active {
+    background: var(--primary);
+    color: #fff;
+    border-color: var(--primary);
+  }
+
+  /* ── FOOTER ── */
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 2rem 0 1rem; }
+</style>
+
+</head>
+<body>
+
+<nav>
+  <span class="brand">📊 ScrapLab</span>
+  <a href="index.html">🏠 Home</a>
+  <a href="hardware.html">Hardware – GPU &amp; CPU</a>
+  <a href="stati.html">Indicatori Globali degli Stati</a>
+  <a href="libri.html">Classifica Libri</a>
+  <a href="film.html">Database Film</a>
+  <a href="calciatori.html">Statistiche Calciatori</a>
+  <a href="missioni_spaziali.html">Missioni Spaziali</a>
+  <a href="farmaci.html">Farmaci e Principi Attivi</a>
+  <a href="smartphone.html">Database Smartphone</a>
+  <a href="laptop.html">Database Laptop</a>
+  <a href="automobili.html">Database Automobili</a>
+  <a href="ristoranti.html" class="active">Database Ristoranti</a>
+</nav>
+
+<main>
+  <h1>Database Ristoranti</h1>
+  <div class="controls">
+    <input type="text" id="search" placeholder="🔍 Cerca...">
+    <select id="col-filter">
+      <option value="-1">Tutte le colonne</option>
+      <option value="0">Ristorante</option>
+      <option value="1">Città</option>
+      <option value="2">Cucina</option>
+      <option value="3">Fascia</option>
+      <option value="4">Voto</option>
+      <option value="5">Prezzo medio (€)</option>
+      <option value="6">N. Recensioni</option>
+    </select>
+    <span class="badge" id="row-count"></span>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Ristorante</th>
+          <th>Città</th>
+          <th>Cucina</th>
+          <th>Fascia</th>
+          <th>Voto</th>
+          <th>Prezzo medio (€)</th>
+          <th>N. Recensioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Osteria dei Sapori</td><td>Roma</td><td>Italiana</td><td>Media</td><td>4.3</td><td>38€</td><td>1240</td></tr>
+        <tr><td>La Piazza</td><td>Milano</td><td>Italiana</td><td>Alta</td><td>4.6</td><td>72€</td><td>890</td></tr>
+        <tr><td>Trattoria del Porto</td><td>Napoli</td><td>Italiana</td><td>Bassa</td><td>4.1</td><td>22€</td><td>2100</td></tr>
+        <tr><td>Sushi Zen</td><td>Milano</td><td>Giapponese</td><td>Media</td><td>4.4</td><td>45€</td><td>780</td></tr>
+        <tr><td>Golden Dragon</td><td>Roma</td><td>Cinese</td><td>Bassa</td><td>3.8</td><td>18€</td><td>540</td></tr>
+        <tr><td>Le Jardin</td><td>Torino</td><td>Francese</td><td>Alta</td><td>4.7</td><td>95€</td><td>320</td></tr>
+        <tr><td>Casa Tacos</td><td>Bologna</td><td>Messicana</td><td>Bassa</td><td>4.0</td><td>20€</td><td>670</td></tr>
+        <tr><td>Pizzeria Napulè</td><td>Napoli</td><td>Italiana</td><td>Bassa</td><td>4.5</td><td>16€</td><td>3400</td></tr>
+        <tr><td>The Steak House</td><td>Milano</td><td>Americana</td><td>Media</td><td>4.2</td><td>52€</td><td>960</td></tr>
+        <tr><td>Ristorante Aurora</td><td>Firenze</td><td>Italiana</td><td>Alta</td><td>4.8</td><td>110€</td><td>450</td></tr>
+        <tr><td>Tandoori Palace</td><td>Roma</td><td>Indiana</td><td>Media</td><td>4.1</td><td>32€</td><td>720</td></tr>
+        <tr><td>El Toro</td><td>Venezia</td><td>Spagnola</td><td>Media</td><td>4.3</td><td>44€</td><td>580</td></tr>
+        <tr><td>La Brasserie</td><td>Genova</td><td>Francese</td><td>Media</td><td>4.2</td><td>48€</td><td>410</td></tr>
+        <tr><td>Pho Saigon</td><td>Milano</td><td>Vietnamita</td><td>Bassa</td><td>4.4</td><td>19€</td><td>1100</td></tr>
+        <tr><td>Trattoria Toscana</td><td>Firenze</td><td>Italiana</td><td>Media</td><td>4.3</td><td>40€</td><td>1560</td></tr>
+        <tr><td>Beirut Street Food</td><td>Roma</td><td>Libanese</td><td>Bassa</td><td>4.0</td><td>21€</td><td>490</td></tr>
+        <tr><td>Osteria del Sole</td><td>Bologna</td><td>Italiana</td><td>Media</td><td>4.5</td><td>36€</td><td>1890</td></tr>
+        <tr><td>Tokyo Ramen</td><td>Torino</td><td>Giapponese</td><td>Bassa</td><td>4.2</td><td>24€</td><td>870</td></tr>
+        <tr><td>La Veranda</td><td>Roma</td><td>Italiana</td><td>Alta</td><td>4.9</td><td>130€</td><td>270</td></tr>
+        <tr><td>Burger Republic</td><td>Milano</td><td>Americana</td><td>Bassa</td><td>3.9</td><td>17€</td><td>2300</td></tr>
+        <tr><td>Maison Gourmet</td><td>Venezia</td><td>Francese</td><td>Alta</td><td>4.6</td><td>98€</td><td>380</td></tr>
+        <tr><td>Kebab del Corso</td><td>Napoli</td><td>Turca</td><td>Bassa</td><td>3.7</td><td>12€</td><td>760</td></tr>
+        <tr><td>Noodle Bar</td><td>Bologna</td><td>Cinese</td><td>Bassa</td><td>4.1</td><td>18€</td><td>620</td></tr>
+        <tr><td>Osteria Veneziana</td><td>Venezia</td><td>Italiana</td><td>Media</td><td>4.4</td><td>50€</td><td>1020</td></tr>
+        <tr><td>Grill & More</td><td>Torino</td><td>Americana</td><td>Media</td><td>4.0</td><td>38€</td><td>540</td></tr>
+        <tr><td>Pizzeria da Enzo</td><td>Roma</td><td>Italiana</td><td>Bassa</td><td>4.6</td><td>18€</td><td>4100</td></tr>
+        <tr><td>Il Pescatore</td><td>Genova</td><td>Italiana</td><td>Media</td><td>4.5</td><td>55€</td><td>930</td></tr>
+        <tr><td>Seoul BBQ</td><td>Milano</td><td>Coreana</td><td>Media</td><td>4.3</td><td>42€</td><td>710</td></tr>
+        <tr><td>Ristorante del Lago</td><td>Como</td><td>Italiana</td><td>Alta</td><td>4.7</td><td>88€</td><td>560</td></tr>
+        <tr><td>Falafel House</td><td>Torino</td><td>Libanese</td><td>Bassa</td><td>4.2</td><td>15€</td><td>840</td></tr>
+        <tr><td>La Cantina</td><td>Firenze</td><td>Italiana</td><td>Media</td><td>4.4</td><td>46€</td><td>1350</td></tr>
+        <tr><td>Dim Sum House</td><td>Roma</td><td>Cinese</td><td>Media</td><td>4.3</td><td>35€</td><td>480</td></tr>
+        <tr><td>Osteria al Ponte</td><td>Venezia</td><td>Italiana</td><td>Alta</td><td>4.5</td><td>80€</td><td>690</td></tr>
+        <tr><td>Spice Route</td><td>Bologna</td><td>Indiana</td><td>Bassa</td><td>4.0</td><td>23€</td><td>390</td></tr>
+        <tr><td>Ristorante Panorama</td><td>Como</td><td>Italiana</td><td>Alta</td><td>4.8</td><td>115€</td><td>300</td></tr>
+        <tr><td>Bratwurst Haus</td><td>Bolzano</td><td>Tedesca</td><td>Media</td><td>4.1</td><td>34€</td><td>620</td></tr>
+        <tr><td>Il Cortile</td><td>Milano</td><td>Italiana</td><td>Alta</td><td>4.7</td><td>105€</td><td>410</td></tr>
+        <tr><td>Thai Garden</td><td>Roma</td><td>Thailandese</td><td>Media</td><td>4.2</td><td>38€</td><td>570</td></tr>
+        <tr><td>Trattoria da Mario</td><td>Napoli</td><td>Italiana</td><td>Bassa</td><td>4.3</td><td>20€</td><td>2800</td></tr>
+        <tr><td>La Terrazza</td><td>Genova</td><td>Italiana</td><td>Alta</td><td>4.6</td><td>90€</td><td>350</td></tr>
+        <tr><td>Mezze &amp; More</td><td>Torino</td><td>Greca</td><td>Media</td><td>4.2</td><td>36€</td><td>480</td></tr>
+        <tr><td>Ramen Ichiban</td><td>Bologna</td><td>Giapponese</td><td>Bassa</td><td>4.5</td><td>22€</td><td>1250</td></tr>
+        <tr><td>Taverna Siciliana</td><td>Palermo</td><td>Italiana</td><td>Media</td><td>4.4</td><td>42€</td><td>1680</td></tr>
+        <tr><td>Roots &amp; Leaves</td><td>Milano</td><td>Vegana</td><td>Media</td><td>4.3</td><td>34€</td><td>920</td></tr>
+        <tr><td>Pepe Nero</td><td>Firenze</td><td>Italiana</td><td>Media</td><td>4.4</td><td>48€</td><td>1040</td></tr>
+        <tr><td>Istanbul Grill</td><td>Roma</td><td>Turca</td><td>Bassa</td><td>3.9</td><td>16€</td><td>430</td></tr>
+        <tr><td>Ristorante Bellavista</td><td>Palermo</td><td>Italiana</td><td>Alta</td><td>4.7</td><td>92€</td><td>280</td></tr>
+        <tr><td>Green Bowl</td><td>Bologna</td><td>Vegana</td><td>Bassa</td><td>4.1</td><td>19€</td><td>760</td></tr>
+        <tr><td>Grotta Azzurra</td><td>Napoli</td><td>Italiana</td><td>Media</td><td>4.5</td><td>44€</td><td>2150</td></tr>
+        <tr><td>Wirtshaus Alpin</td><td>Bolzano</td><td>Tedesca</td><td>Media</td><td>4.3</td><td>39€</td><td>510</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>ScrapLab – sito di esercitazione per Selenium, Pandas &amp; Matplotlib</footer>
+
+<script>
+(function () {
+  const ROWS_PER_PAGE = 25;
+  let currentPage = 1;
+  let sortCol = -1, sortDir = 1;
+  let filtered = [];
+
+  const tbody    = document.querySelector('tbody');
+  const allRows  = Array.from(tbody.querySelectorAll('tr'));
+  const countEl  = document.getElementById('row-count');
+  const searchEl = document.getElementById('search');
+  const colSel   = document.getElementById('col-filter');
+  const pagDiv   = document.getElementById('pagination');
+
+  function applyFilter() {
+    const q   = searchEl.value.toLowerCase();
+    const col = parseInt(colSel.value);
+    filtered  = allRows.filter(tr => {
+      const cells = tr.querySelectorAll('td');
+      if (col === -1) return Array.from(cells).some(td => td.textContent.toLowerCase().includes(q));
+      return cells[col] && cells[col].textContent.toLowerCase().includes(q);
+    });
+    currentPage = 1;
+    render();
+  }
+
+  function applySort(colIdx) {
+    if (sortCol === colIdx) sortDir *= -1;
+    else { sortCol = colIdx; sortDir = 1; }
+    filtered.sort((a, b) => {
+      const va = a.querySelectorAll('td')[colIdx]?.textContent || '';
+      const vb = b.querySelectorAll('td')[colIdx]?.textContent || '';
+      const na = parseFloat(va.replace(/[^0-9.\-]/g, ''));
+      const nb = parseFloat(vb.replace(/[^0-9.\-]/g, ''));
+      if (!isNaN(na) && !isNaN(nb)) return (na - nb) * sortDir;
+      return va.localeCompare(vb) * sortDir;
+    });
+    document.querySelectorAll('thead th').forEach((th, i) => {
+      th.classList.remove('sort-asc', 'sort-desc');
+      if (i === colIdx) th.classList.add(sortDir === 1 ? 'sort-asc' : 'sort-desc');
+    });
+    render();
+  }
+
+  function render() {
+    const total = filtered.length;
+    const pages = Math.max(1, Math.ceil(total / ROWS_PER_PAGE));
+    if (currentPage > pages) currentPage = pages;
+    const start = (currentPage - 1) * ROWS_PER_PAGE;
+    const slice = filtered.slice(start, start + ROWS_PER_PAGE);
+
+    allRows.forEach(tr => tr.style.display = 'none');
+    slice.forEach(tr => tr.style.display = '');
+
+    let noEl = tbody.querySelector('.no-results-row');
+    if (slice.length === 0) {
+      if (!noEl) {
+        noEl = document.createElement('tr');
+        noEl.className = 'no-results-row';
+        const cols = document.querySelectorAll('thead th').length;
+        noEl.innerHTML = `<td colspan="${cols}" class="no-results">Nessun risultato trovato.</td>`;
+        tbody.appendChild(noEl);
+      }
+    } else if (noEl) noEl.remove();
+
+    countEl.textContent = total + ' righe';
+
+    pagDiv.innerHTML = '';
+    pageRange(currentPage, pages).forEach(p => {
+      const btn = document.createElement('button');
+      if (p === '…') { btn.textContent = '…'; btn.disabled = true; }
+      else {
+        btn.textContent = p;
+        if (p === currentPage) btn.classList.add('active');
+        btn.onclick = () => { currentPage = p; render(); };
+      }
+      pagDiv.appendChild(btn);
+    });
+  }
+
+  function pageRange(cur, tot) {
+    if (tot <= 7) return Array.from({length: tot}, (_, i) => i + 1);
+    const r = [1];
+    if (cur > 3) r.push('…');
+    for (let i = Math.max(2, cur - 1); i <= Math.min(tot - 1, cur + 1); i++) r.push(i);
+    if (cur < tot - 2) r.push('…');
+    r.push(tot);
+    return r;
+  }
+
+  searchEl.addEventListener('input', applyFilter);
+  colSel.addEventListener('change', applyFilter);
+  document.querySelectorAll('thead th').forEach((th, i) =>
+    th.addEventListener('click', () => applySort(i))
+  );
+
+  filtered = [...allRows];
+  render();
+})();
+</script>
+
+</body>
+</html>
